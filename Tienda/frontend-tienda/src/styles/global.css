@@ -181,3 +181,30 @@ th {
         width: 94%;
     }
 }
+
+.hero {
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #ffffff, #eff6ff);
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.home-welcome {
+    margin-bottom: 24px;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.muted-text {
+    color: #64748b;
+    font-weight: 700;
+}
