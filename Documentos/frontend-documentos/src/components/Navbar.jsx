@@ -60,7 +60,7 @@ function Navbar() {
 
             {isAuthenticated && (
                 <div className="navbar-user">
-                    Sesión iniciada como <strong>{user?.name}</strong>
+                    <span className="navbar-user-text">Bienvenido/a | <span className="navbar-user-name">{user?.name}</span></span>
                 </div>
             )}
         </header>
