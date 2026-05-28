@@ -1,27 +1,69 @@
-import { NavLink } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 
 function Navbar() {
-    const { isAuthenticated, isAdmin, logout } = useAuth()
+    const { user, isAuthenticated, isAdmin, logout } = useAuth()
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        logout()
+        navigate('/')
+    }
 
     return (
-        <nav className='navbar'>
-            <NavLink to='/'>Inicio</NavLink>
-            <NavLink to='/documentos'>Documentos</NavLink>
+        <header className="navbar">
+            <div className="navbar-container">
+                <Link to="/" className="navbar-brand">
+                    API Documentos
+                </Link>
 
-            {isAuthenticated && <NavLink to='/mis-documentos'>Mis documentos</NavLink>}
-            {isAdmin && <NavLink to='/admin'>Admin</NavLink>}
-            {isAuthenticated && <NavLink to='/perfil'>Perfil</NavLink>}
+                <nav className="navbar-links">
+                    <NavLink to="/" className="nav-link">
+                        Inicio
+                    </NavLink>
 
-            {!isAuthenticated && <NavLink to='/login'>Login</NavLink>}
-            {!isAuthenticated && <NavLink to='/register'>Registro</NavLink>}
+                    <NavLink to="/documentos" className="nav-link">
+                        Documentos
+                    </NavLink>
+
+                    {isAuthenticated && (
+                        <NavLink to="/mis-documentos" className="nav-link">
+                            Mis documentos
+                        </NavLink>
+                    )}
+
+                    {isAdmin && (
+                        <NavLink to="/admin" className="nav-link">
+                            Admin
+                        </NavLink>
+                    )}
+
+                    {!isAuthenticated && (
+                        <>
+                            <NavLink to="/login" className="nav-link">
+                                Login
+                            </NavLink>
+
+                            <NavLink to="/register" className="nav-link">
+                                Registro
+                            </NavLink>
+                        </>
+                    )}
+
+                    {isAuthenticated && (
+                        <button type="button" className="nav-button" onClick={handleLogout}>
+                            Cerrar sesión
+                        </button>
+                    )}
+                </nav>
+            </div>
 
             {isAuthenticated && (
-                <button type='button' onClick={logout}>
-                    Cerrar sesión
-                </button>
+                <div className="navbar-user">
+                    Sesión iniciada como <strong>{user?.name}</strong>
+                </div>
             )}
-        </nav>
+        </header>
     )
 }
 

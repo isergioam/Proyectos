@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import { registerUser } from '../services/authService.js'
+import Navbar from '../components/Navbar.jsx'
 
 function RegisterPage() {
     const navigate = useNavigate()
@@ -49,6 +50,7 @@ function RegisterPage() {
 
     return (
         <section>
+            <Navbar />
             <h1 className="page-title">Registro de usuario</h1>
             <p className="page-subtitle">
                 Crea una cuenta para poder iniciar sesión y consultar tu perfil.

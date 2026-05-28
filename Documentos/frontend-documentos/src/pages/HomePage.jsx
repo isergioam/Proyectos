@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import Navbar from '../components/Navbar.jsx'
 
 function HomePage() {
     const { isAuthenticated, isAdmin, user } = useAuth()
 
     return (
+
         <section>
+            <Navbar />
             <div className="hero card">
                 <div>
                     <h1 className="page-title">API Documentos con React y Node</h1>
@@ -53,10 +56,10 @@ function HomePage() {
                 <article className="card">
                     <h2>Catálogo público</h2>
                     <p>
-                        Cualquier usuario puede consultar productos, ver su precio, revisar el stock y acceder al detalle.
+                        Cualquier usuario puede consultar documentos, ver su tamaño y acceder al detalle.
                     </p>
-                    <Link to="/productos" className="btn btn-outline">
-                        Explorar catálogo
+                    <Link to="/documentos" className="btn btn-outline">
+                        Explorar documentos
                     </Link>
                 </article>
 
@@ -80,7 +83,7 @@ function HomePage() {
                 <article className="card">
                     <h2>Administración</h2>
                     <p>
-                        Los administradores pueden crear, editar y eliminar productos, gestionar categorías y subir imágenes.
+                        Los administradores pueden crear, editar y eliminar documentos, gestionar categorías y subir imágenes.
                     </p>
 
                     {isAdmin ? (

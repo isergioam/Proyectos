@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import Navbar from '../components/Navbar.jsx'
 
 function ProfilePage() {
     const { user, isAdmin, logout } = useAuth()
 
     return (
         <section>
+            <Navbar />
             <h1 className="page-title">Mi perfil</h1>
             <p className="page-subtitle">
                 Datos del usuario autenticado en la aplicación.
