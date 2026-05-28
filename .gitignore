@@ -1,3 +1,66 @@
-node_modules
-.env
-src/uploads
+# Dependencies
+Tienda/backend-tienda/node_modules/
+Tienda/frontend-tienda/node_modules/
+Documentos/backend-documentos/node_modules/
+Documentos/frontend-documentos/node_modules/
+Tienda/frontend-tienda/npm-debug.log*
+Tienda/backend-tienda/npm-debug.log*
+Documentos/frontend-documentos/npm-debug.log*
+Documentos/backend-documentos/npm-debug.log*
+Tienda/frontend-tienda/yarn-debug.log*
+Tienda/backend-tienda/yarn-debug.log*
+Documentos/frontend-documentos/yarn-debug.log*
+Documentos/backend-documentos/yarn-debug.log*
+Tienda/frontend-tienda/yarn-error.log*
+Tienda/backend-tienda/yarn-error.log*
+Documentos/frontend-documentos/yarn-error.log*
+Documentos/backend-documentos/yarn-error.log*
+
+# Environment variables
+Tienda/backend-tienda/.env
+Tienda/frontend-tienda/.env
+Documentos/backend-documentos/.env
+Documentos/frontend-documentos/.env
+
+
+# Build output
+Tienda/backend-tienda/dist/
+Tienda/frontend-tienda/dist/
+Documentos/backend-documentos/dist/
+Documentos/frontend-documentos/dist/
+Tienda/backend-tienda/build/
+Tienda/frontend-tienda/build/
+Documentos/backend-documentos/build/
+Documentos/frontend-documentos/build/
+Tienda/backend-tienda/*.tsbuildinfo
+Tienda/frontend-tienda/*.tsbuildinfo
+Documentos/backend-documentos/*.tsbuildinfo
+Documentos/frontend-documentos/*.tsbuildinfo
+
+# Local development
+Tienda/backend-tienda/.vscode/
+Tienda/frontend-tienda/.vscode/
+Documentos/backend-documentos/.vscode/
+Documentos/frontend-documentos/.vscode/
+Tienda/backend-tienda/.idea/
+Tienda/frontend-tienda/.idea/
+Documentos/backend-documentos/.idea/
+Documentos/frontend-documentos/.idea/
+Tienda/backend-tienda/*.swp
+Tienda/frontend-tienda/*.swp
+Documentos/backend-documentos/*.swp
+Documentos/frontend-documentos/*.swp
+
+# Coverage (if using Jest)
+Tienda/backend-tienda/coverage/
+Tienda/frontend-tienda/coverage/
+Documentos/backend-documentos/coverage/
+Documentos/frontend-documentos/coverage/
+Tienda/backend-tienda/.nyc_output/
+Tienda/frontend-tienda/.nyc_output/
+Documentos/backend-documentos/.nyc_output/
+Documentos/frontend-documentos/.nyc_output/
+
+# Uploads (if applicable)
+Tienda/backend-tienda/src/uploads
+Documentos/backend-documentos/src/uploads

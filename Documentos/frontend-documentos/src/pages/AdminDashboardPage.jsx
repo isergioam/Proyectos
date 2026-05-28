@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar.jsx'
 
 function AdminDashboardPage() {
     const { user } = useAuth()
 
     return (
-        <main className='page'>
-            <div className='container'>
+        <section>
+            <Navbar />
+            <div className='page'>
                 <header className='page-header'>
                     <span className='badge'>Panel administrador</span>
                     <h1 className='page-title'>Panel de administración</h1>
@@ -53,7 +55,7 @@ function AdminDashboardPage() {
                     </article>
                 </section>
             </div>
-        </main>
+        </section>
     )
 }
 
