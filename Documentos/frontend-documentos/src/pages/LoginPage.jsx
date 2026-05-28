@@ -29,16 +29,18 @@ function LoginPage() {
     return (
         <>
             <Navbar />
-            <main className='container'>
-                <h1>Login</h1>
-                <ErrorMessage message={error} />
+            <div className='page'>
+                <main className='container'>
+                    <h1>Login</h1>
+                    <ErrorMessage message={error} />
 
-                <form className='form' onSubmit={handleSubmit}>
-                    <input name='email' type='email' value={formData.email} onChange={handleChange} placeholder='Email' />
-                    <input name='password' type='password' value={formData.password} onChange={handleChange} placeholder='Password' />
-                    <button type='submit'>Entrar</button>
-                </form>
-            </main>
+                    <form className='form' onSubmit={handleSubmit}>
+                        <input name='email' type='email' value={formData.email} onChange={handleChange} placeholder='Email' />
+                        <input name='password' type='password' value={formData.password} onChange={handleChange} placeholder='Password' />
+                        <button type='submit'>Entrar</button>
+                    </form>
+                </main>
+            </div>
         </>
     )
 }

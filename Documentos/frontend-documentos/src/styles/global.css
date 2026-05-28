@@ -9,28 +9,28 @@
 :root {
     --font: 'Inter', system-ui, -apple-system, sans-serif;
 
-    --clr-bg:       #f7f7f8;
-    --clr-surface:  #ffffff;
-    --clr-border:   #e4e4e7;
+    --clr-bg: #f7f7f8;
+    --clr-surface: #ffffff;
+    --clr-border: #e4e4e7;
 
-    --clr-text:     #18181b;
+    --clr-text: #18181b;
     --clr-text-mid: #52525b;
     --clr-text-dim: #71717a;
 
-    --clr-primary:     #18181b;
+    --clr-primary: #18181b;
     --clr-primary-hov: #27272a;
-    --clr-accent:      #2563eb;
-    --clr-accent-hov:  #1d4ed8;
+    --clr-accent: #2563eb;
+    --clr-accent-hov: #1d4ed8;
     --clr-accent-soft: #eff6ff;
 
-    --clr-danger:      #dc2626;
-    --clr-danger-hov:  #b91c1c;
-    --clr-success:     #16a34a;
-    --clr-success-bg:  #f0fdf4;
-    --clr-error-bg:    #fef2f2;
+    --clr-danger: #dc2626;
+    --clr-danger-hov: #b91c1c;
+    --clr-success: #16a34a;
+    --clr-success-bg: #f0fdf4;
+    --clr-error-bg: #fef2f2;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow:    0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
     --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
 
     --space-xs: 4px;
@@ -88,7 +88,10 @@ img {
     display: block;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     line-height: 1.25;
     letter-spacing: -0.02em;
 }
@@ -102,7 +105,9 @@ h1, h2, h3, h4 {
 }
 
 .page {
-    padding: var(--space-xl) 0;
+    padding: var(--space-xl) var(--space-lg);
+    width: 60%;
+    margin: 0 auto;
 }
 
 .page-header {

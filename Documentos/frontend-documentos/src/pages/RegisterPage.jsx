@@ -51,67 +51,71 @@ function RegisterPage() {
     return (
         <section>
             <Navbar />
-            <h1 className="page-title">Registro de usuario</h1>
-            <p className="page-subtitle">
-                Crea una cuenta para poder iniciar sesión y consultar tu perfil.
-            </p>
+            <div className="page">
 
-            <ErrorMessage message={error} />
 
-            {success && (
-                <div className="alert alert-success">
-                    {success}. Redirigiendo al login...
-                </div>
-            )}
+                <h1 className="page-title">Registro de usuario</h1>
+                <p className="page-subtitle">
+                    Crea una cuenta para poder iniciar sesión y consultar tu perfil.
+                </p>
 
-            <form className="form card" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="name">Nombre</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Ejemplo: Laura Pérez"
-                        required
-                    />
-                </div>
+                <ErrorMessage message={error} />
 
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="usuario@email.com"
-                        required
-                    />
-                </div>
+                {success && (
+                    <div className="alert alert-success">
+                        {success}. Redirigiendo al login...
+                    </div>
+                )}
 
-                <div className="form-group">
-                    <label htmlFor="password">Contraseña</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Mínimo recomendado: 6 caracteres"
-                        required
-                    />
-                </div>
+                <form className="form card" onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label htmlFor="name">Nombre</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Ejemplo: Laura Pérez"
+                            required
+                        />
+                    </div>
 
-                <button type="submit" className="btn" disabled={loading}>
-                    {loading ? 'Registrando usuario...' : 'Crear cuenta'}
-                </button>
-            </form>
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="usuario@email.com"
+                            required
+                        />
+                    </div>
 
-            <p className="auth-helper-text">
-                ¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link>.
-            </p>
+                    <div className="form-group">
+                        <label htmlFor="password">Contraseña</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder="Mínimo recomendado: 6 caracteres"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="btn" disabled={loading}>
+                        {loading ? 'Registrando usuario...' : 'Crear cuenta'}
+                    </button>
+                </form>
+
+                <p className="auth-helper-text">
+                    ¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link>.
+                </p>
+            </div>
         </section>
     )
 }
