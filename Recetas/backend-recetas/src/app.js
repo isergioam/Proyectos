@@ -1,23 +1,40 @@
-import express from 'express'
-import cors from 'cors'
-import authRoutes from './routes/auth.routes.js'
-import recetasRoutes from './routes/recetas.routes.js'
-import { notFound } from './middlewares/notFound.middleware.js'
-import { errorHandler } from './middlewares/error.middleware.js'
+import express from "express";
+import cors from "cors";
 
-const app = express()
+import recipesRoutes from "./routes/recipes.routes.js";
+import ingredientsRoutes from "./routes/ingredients.routes.js";
+import { httpError } from "./validations/httpError.js";
 
-app.use(cors({
-    origin: process.env.FRONTEND_URL || '*'
-}))
+export function createApp() {
+    const app = express();
 
-app.use(express.json())
-app.use('/uploads', express.static('src/uploads'))
+    // JSON body
+    app.use(express.json());
 
-app.use('/api', authRoutes)
-app.use('/api', recetasRoutes)
+    // CORS para frontend
+    app.use(cors({ origin: true }));
 
-app.use(notFound)
-app.use(errorHandler)
+    // Healthcheck
+    app.get("/api/health", (req, res) => {
+        res.json({ ok: true, message: "API Recetas funcionando" });
+    });
 
-export default app
+    // Routes
+    app.use("/api/recipes", recipesRoutes);
+    app.use("/api/ingredients", ingredientsRoutes);
+
+    // 404
+    app.use((req, res) => {
+        res.status(404).json({ error: "Not Found" });
+    });
+
+    // Error handler
+    app.use((err, req, res, next) => {
+        const status = err.status || 500;
+        const message = err.message || "Internal Server Error";
+        res.status(status).json({ error: message });
+    });
+
+    return app;
+}
+
