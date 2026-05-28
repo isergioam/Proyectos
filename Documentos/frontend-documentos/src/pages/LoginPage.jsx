@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Navbar } from '../components/Navbar'
-import { useAuth } from '../context/AuthContext'
+//import { useAuth } from '../context/AuthContext'
 
 export const LoginPage = () => {
     const navigate = useNavigate()
