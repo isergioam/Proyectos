@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { DocumentForm } from '../components/DocumentForm'
-import { ErrorMessage } from '../components/ErrorMessage'
-import { Navbar } from '../components/Navbar'
+import DocumentForm from '../components/DocumentForm'
+import ErrorMessage from '../components/ErrorMessage'
+import Navbar from '../components/Navbar'
 import { createDocument } from '../services/documentsService'
 
-export const DocumentCreatePage = () => {
+function DocumentCreatePage() {
     const navigate = useNavigate()
     const [error, setError] = useState('')
 
@@ -36,3 +36,5 @@ export const DocumentCreatePage = () => {
         </>
     )
 }
+
+export default DocumentCreatePage

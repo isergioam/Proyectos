@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { DocumentCard } from '../components/DocumentCard'
-import { DocumentsFilters } from '../components/DocumentsFilters'
-import { ErrorMessage } from '../components/ErrorMessage'
-import { LoadingMessage } from '../components/LoadingMessage'
-import { Navbar } from '../components/Navbar'
+import DocumentCard from '../components/DocumentCard'
+import DocumentsFilters from '../components/DocumentsFilters'
+import ErrorMessage from '../components/ErrorMessage'
+import LoadingMessage from '../components/LoadingMessage'
+import Navbar from '../components/Navbar'
 import { getPublicDocuments } from '../services/documentsService'
 
 const initialFilters = {
@@ -13,7 +13,7 @@ const initialFilters = {
     limit: 10
 }
 
-export const DocumentsPage = () => {
+function DocumentsPage() {
     const [filters, setFilters] = useState(initialFilters)
     const [documents, setDocuments] = useState([])
     const [meta, setMeta] = useState(null)
@@ -81,3 +81,5 @@ export const DocumentsPage = () => {
         </>
     )
 }
+
+export default DocumentsPage

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { DocumentForm } from '../components/DocumentForm'
-import { ErrorMessage } from '../components/ErrorMessage'
-import { LoadingMessage } from '../components/LoadingMessage'
-import { Navbar } from '../components/Navbar'
+import DocumentForm from '../components/DocumentForm'
+import ErrorMessage from '../components/ErrorMessage'
+import LoadingMessage from '../components/LoadingMessage'
+import Navbar from '../components/Navbar'
 import { getMyDocuments, updateDocument } from '../services/documentsService'
 
-export const DocumentEditPage = () => {
+function DocumentEditPage() {
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -64,3 +64,5 @@ export const DocumentEditPage = () => {
         </>
     )
 }
+
+export default DocumentEditPage

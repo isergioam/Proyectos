@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
-//import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext'
 
-export const Navbar = () => {
+function Navbar() {
     const { isAuthenticated, isAdmin, logout } = useAuth()
 
     return (
@@ -24,3 +24,5 @@ export const Navbar = () => {
         </nav>
     )
 }
+
+export default Navbar

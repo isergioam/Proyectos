@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom'
-//import { useAuth } from '../context/AuthContext'
-import { LoadingMessage } from './LoadingMessage'
+import { useAuth } from '../context/AuthContext'
+import LoadingMessage from './LoadingMessage'
 
-export const AdminRoute = ({ children }) => {
+function AdminRoute({ children }) {
     const { isAuthenticated, isAdmin, loading } = useAuth()
 
     if (loading) {
@@ -19,3 +19,5 @@ export const AdminRoute = ({ children }) => {
 
     return children
 }
+
+export default AdminRoute

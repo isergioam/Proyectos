@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { DocumentCard } from '../components/DocumentCard'
-import { ErrorMessage } from '../components/ErrorMessage'
-import { LoadingMessage } from '../components/LoadingMessage'
-import { Navbar } from '../components/Navbar'
+import DocumentCard from '../components/DocumentCard'
+import ErrorMessage from '../components/ErrorMessage'
+import LoadingMessage from '../components/LoadingMessage'
+import Navbar from '../components/Navbar'
 import { deleteDocument, getMyDocuments } from '../services/documentsService'
 
-export const MyDocumentsPage = () => {
+function MyDocumentsPage() {
     const [documents, setDocuments] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -65,3 +65,5 @@ export const MyDocumentsPage = () => {
         </>
     )
 }
+
+export default MyDocumentsPage

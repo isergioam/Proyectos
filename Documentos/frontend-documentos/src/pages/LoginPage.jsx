@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ErrorMessage } from '../components/ErrorMessage'
-import { Navbar } from '../components/Navbar'
-//import { useAuth } from '../context/AuthContext'
+import ErrorMessage from '../components/ErrorMessage'
+import Navbar from '../components/Navbar'
+import { useAuth } from '../context/AuthContext'
 
-export const LoginPage = () => {
+function LoginPage() {
     const navigate = useNavigate()
     const { login } = useAuth()
     const [formData, setFormData] = useState({ email: '', password: '' })
@@ -42,3 +42,5 @@ export const LoginPage = () => {
         </>
     )
 }
+
+export default LoginPage

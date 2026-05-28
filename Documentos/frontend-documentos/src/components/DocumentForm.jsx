@@ -8,7 +8,7 @@ const initialForm = {
     file: null
 }
 
-export const DocumentForm = ({ initialData, submitLabel, requiresFile = false, onSubmit }) => {
+function DocumentForm({ initialData, submitLabel, requiresFile = false, onSubmit }) {
     const [formData, setFormData] = useState(initialForm)
 
     useEffect(() => {
@@ -79,3 +79,5 @@ export const DocumentForm = ({ initialData, submitLabel, requiresFile = false, o
         </form>
     )
 }
+
+export default DocumentForm

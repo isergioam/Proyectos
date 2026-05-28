@@ -1,4 +1,4 @@
-export const DocumentsFilters = ({ filters, onChange, onSubmit, onReset }) => {
+function DocumentsFilters({ filters, onChange, onSubmit, onReset }) {
     return (
         <form className='filters' onSubmit={onSubmit}>
             <input
@@ -22,3 +22,5 @@ export const DocumentsFilters = ({ filters, onChange, onSubmit, onReset }) => {
         </form>
     )
 }
+
+export default DocumentsFilters

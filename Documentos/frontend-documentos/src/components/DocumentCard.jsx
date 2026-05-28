@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const UPLOADS_URL = import.meta.env.VITE_UPLOADS_URL
 
-export const DocumentCard = ({ document, editable = false, onDelete }) => {
+function DocumentCard({ document, editable = false, onDelete }) {
     const fileUrl = `${UPLOADS_URL}/${document.file_name}`
 
     return (
@@ -29,3 +29,5 @@ export const DocumentCard = ({ document, editable = false, onDelete }) => {
         </article>
     )
 }
+
+export default DocumentCard
