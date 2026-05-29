@@ -39,7 +39,8 @@ export const apiRequest = async (endpoint, options = {}) => {
 
     const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
-        headers
+        headers,
+        body
     })
 
     const contentType = response.headers.get('content-type')

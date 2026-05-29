@@ -19,7 +19,7 @@ export const AIProductComparator = () => {
         const loadProducts = async () => {
             try {
                 const data = await getProductsForAISelector()
-                setProducts(data.products || data)
+                setProducts(Array.isArray(data) ? data : data.data || [])
             } catch (error) {
                 setError(error.message)
             } finally {
