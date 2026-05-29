@@ -3,9 +3,11 @@ import { pool } from "../database/connection.js";
 export async function listCommentsByRecipe(recetaId) {
     const [rows] = await pool.query(
         `SELECT c.id, c.texto, c.created_at,
-            u.id AS usuario_id, u.nombre, u.email
+            u.id AS usuario_id, u.nombre, u.email,
+            v.estrellas AS user_estrellas
      FROM comentarios c
      JOIN usuarios u ON u.id = c.usuario_id
+     LEFT JOIN valoraciones v ON v.receta_id = c.receta_id AND v.usuario_id = c.usuario_id
      WHERE c.receta_id = ?
      ORDER BY c.created_at DESC`,
         [recetaId]

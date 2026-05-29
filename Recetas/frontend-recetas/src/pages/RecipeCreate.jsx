@@ -75,55 +75,111 @@ export default function RecipeCreate() {
     }
 
     return (
-        <section className="card">
-            <h2>Crear receta</h2>
+        <section className="recipe-create">
+            <div className="back-bar">
+                <a href="#/list" className="btn-back">← Cancelar y volver</a>
+            </div>
 
-            {error && <p className="error">❌ {error}</p>}
-            {ok && <p className="ok">{ok}</p>}
+            <div className="card form-container-card">
+                <h2>🍳 Comparte tu Creación Culinaria</h2>
+                <p className="form-subtitle">Publica tu receta favorita para que otros miembros de GustoShare puedan cocinarla y valorarla.</p>
 
-            <form onSubmit={onSubmit} className="form">
-                <h3>Autor</h3>
-                <div className="row2">
-                    <input placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-                    <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
+                {error && <p className="error-banner">⚠️ Error: {error}</p>}
+                {ok && <p className="ok-banner">{ok}</p>}
 
-                <h3>Receta</h3>
-                <input placeholder="Título" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
-                <input placeholder="Descripción" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+                <form onSubmit={onSubmit} className="social-form">
+                    <div className="form-section card-inner">
+                        <h3>👤 Información del Chef</h3>
+                        <p className="section-helper">Tu nombre aparecerá firmado como creador de la receta.</p>
+                        <div className="row-inputs">
+                            <div className="form-group-custom">
+                                <label>Tu Nombre</label>
+                                <input placeholder="Ej. Carlos Arguiñano" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+                            </div>
+                            <div className="form-group-custom">
+                                <label>Tu Email (privado)</label>
+                                <input type="email" placeholder="Ej. chef@gustoshare.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            </div>
+                        </div>
+                    </div>
 
-                <div className="row3">
-                    <input placeholder="Tiempo (min)" value={tiempoMin} onChange={(e) => setTiempoMin(e.target.value)} />
-                    <input placeholder="Porciones" value={porciones} onChange={(e) => setPorciones(e.target.value)} />
-                    <select value={dificultad} onChange={(e) => setDificultad(e.target.value)}>
-                        <option value="facil">facil</option>
-                        <option value="media">media</option>
-                        <option value="dificil">dificil</option>
-                    </select>
-                </div>
+                    <div className="form-section card-inner">
+                        <h3>🍲 Detalles de la Receta</h3>
+                        <p className="section-helper">Describe tu plato y añade los tiempos y raciones recomendadas.</p>
+                        
+                        <div className="form-group-custom">
+                            <label>Título del Plato</label>
+                            <input placeholder="Ej. Lasaña Casera de Espinacas y Ricotta" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
+                        </div>
 
-                <input placeholder="Foto URL (opcional)" value={fotoUrl} onChange={(e) => setFotoUrl(e.target.value)} />
+                        <div className="form-group-custom">
+                            <label>Breve Descripción</label>
+                            <input placeholder="Ej. Una lasaña súper cremosa y llena de sabor, perfecta para el domingo." value={descripcion} onChange={(e) => setDescripcion(e.target.value)} required />
+                        </div>
 
-                <textarea
-                    placeholder="Pasos (texto largo)"
-                    value={pasos}
-                    onChange={(e) => setPasos(e.target.value)}
-                    rows={8}
-                />
+                        <div className="row-three-inputs">
+                            <div className="form-group-custom">
+                                <label>Tiempo (minutos)</label>
+                                <input type="number" placeholder="Ej. 45" value={tiempoMin} onChange={(e) => setTiempoMin(e.target.value)} />
+                            </div>
+                            <div className="form-group-custom">
+                                <label>Raciones</label>
+                                <input type="number" placeholder="Ej. 4" value={porciones} onChange={(e) => setPorciones(e.target.value)} />
+                            </div>
+                            <div className="form-group-custom">
+                                <label>Dificultad</label>
+                                <select value={dificultad} onChange={(e) => setDificultad(e.target.value)}>
+                                    <option value="facil">Fácil 🟢</option>
+                                    <option value="media">Media 🟡</option>
+                                    <option value="dificil">Difícil 🔴</option>
+                                </select>
+                            </div>
+                        </div>
 
-                <h3>Ingredientes</h3>
-                {ingredients.map((it, idx) => (
-                    <IngredientRow
-                        key={idx}
-                        item={it}
-                        onChange={(v) => changeIng(idx, v)}
-                        onRemove={() => removeIng(idx)}
-                    />
-                ))}
-                <button type="button" onClick={addIng}>+ Añadir ingrediente</button>
+                        <div className="form-group-custom">
+                            <label>Foto de Portada (Enlace URL)</label>
+                            <input placeholder="Ej. https://enlace-a-tu-imagen.jpg" value={fotoUrl} onChange={(e) => setFotoUrl(e.target.value)} />
+                        </div>
+                    </div>
 
-                <button className="primary" type="submit">Crear</button>
-            </form>
+                    <div className="form-section card-inner">
+                        <h3>🛒 Ingredientes Necesarios</h3>
+                        <p className="section-helper">Añade los ingredientes uno a uno, indicando la cantidad y unidad.</p>
+                        
+                        <div className="ingredients-form-list">
+                            {ingredients.map((it, idx) => (
+                                <IngredientRow
+                                    key={idx}
+                                    item={it}
+                                    onChange={(v) => changeIng(idx, v)}
+                                    onRemove={() => removeIng(idx)}
+                                />
+                            ))}
+                        </div>
+                        <button type="button" className="btn-add-ingredient" onClick={addIng}>
+                            ➕ Añadir otro ingrediente
+                        </button>
+                    </div>
+
+                    <div className="form-section card-inner">
+                        <h3>👩‍🍳 Pasos de Preparación</h3>
+                        <p className="section-helper">Escribe cada paso en una línea nueva para que aparezca numerado automáticamente.</p>
+                        <div className="form-group-custom">
+                            <textarea
+                                placeholder="Paso 1: Precalentar el horno a 180ºC...&#10;Paso 2: En una sartén, dorar la cebolla..."
+                                value={pasos}
+                                onChange={(e) => setPasos(e.target.value)}
+                                rows={8}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-actions">
+                        <button className="primary btn-submit-recipe" type="submit">🚀 Publicar Receta en GustoShare</button>
+                    </div>
+                </form>
+            </div>
         </section>
     );
 }

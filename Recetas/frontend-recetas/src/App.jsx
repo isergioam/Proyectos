@@ -24,13 +24,16 @@ export default function App() {
   return (
     <div className="container">
       <header className="topbar">
-        <div>
-          <h1>🍲 Recetas colaborativas</h1>
-          <p className="sub">CRUD con hambre, N–M con cariño y ⭐ sin drama.</p>
+        <div className="brand">
+          <span className="brand-logo">🍲</span>
+          <div>
+            <h1>GustoShare</h1>
+            <p className="sub">La red social gourmet para compartir y descubrir recetas en comunidad.</p>
+          </div>
         </div>
         <nav className="nav">
-          <a href="#/list">Listado</a>
-          <a href="#/create">Crear receta</a>
+          <a href="#/list" className={route.name === "list" || route.name === "detail" ? "active" : ""}>Explorar recetas</a>
+          <a href="#/create" className={route.name === "create" ? "active" : "btn-create"}>+ Compartir Receta</a>
         </nav>
       </header>
 

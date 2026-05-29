@@ -150,46 +150,60 @@ export default function RecipesList() {
                         {Array.isArray(items) &&
                             items.map((r) => {
                                 const rating = Number(r.rating_media || 0);
+                                const recipeImage = r.foto_url && r.foto_url.trim() !== "" 
+                                    ? r.foto_url 
+                                    : "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&auto=format&fit=crop&q=60";
 
                                 return (
                                     <a
                                         key={r.id}
-                                        className="item"
+                                        className="item-card"
                                         href={`#/recipe/${r.id}`}
                                     >
-                                        <div className="item-head">
-                                            <h3>{r.titulo}</h3>
-
-                                            <Stars
-                                                value={rating}
-                                                readOnly
+                                        <div className="item-card-image-wrapper">
+                                            <img
+                                                src={recipeImage}
+                                                alt={r.titulo}
+                                                className="item-card-image"
+                                                onError={(e) => {
+                                                    e.target.src = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&auto=format&fit=crop&q=60";
+                                                }}
                                             />
-                                        </div>
-
-                                        <p className="muted">
-                                            {r.descripcion}
-                                        </p>
-
-                                        <div className="tags">
-                                            <span className="tag">
+                                            <span className="difficulty-badge" data-difficulty={r.dificultad}>
                                                 {r.dificultad}
                                             </span>
+                                        </div>
 
-                                            {r.tiempo_min ? (
-                                                <span className="tag">
-                                                    {r.tiempo_min} min
+                                        <div className="item-card-body">
+                                            <div className="item-card-head">
+                                                <h3>{r.titulo}</h3>
+                                                <Stars
+                                                    value={rating}
+                                                    readOnly
+                                                />
+                                            </div>
+
+                                            <p className="item-card-desc">
+                                                {r.descripcion}
+                                            </p>
+
+                                            <div className="item-card-meta">
+                                                {r.tiempo_min ? (
+                                                    <span className="meta-tag">
+                                                        ⏱️ {r.tiempo_min} min
+                                                    </span>
+                                                ) : null}
+
+                                                {r.porciones ? (
+                                                    <span className="meta-tag">
+                                                        👥 {r.porciones} porc.
+                                                    </span>
+                                                ) : null}
+
+                                                <span className="meta-tag rating-tag">
+                                                    💬 {r.rating_total || 0}
                                                 </span>
-                                            ) : null}
-
-                                            {r.porciones ? (
-                                                <span className="tag">
-                                                    {r.porciones} porciones
-                                                </span>
-                                            ) : null}
-
-                                            <span className="tag">
-                                                ⭐ {r.rating_total}
-                                            </span>
+                                            </div>
                                         </div>
                                     </a>
                                 );
