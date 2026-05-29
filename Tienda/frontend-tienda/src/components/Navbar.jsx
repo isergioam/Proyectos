@@ -26,6 +26,10 @@ function Navbar() {
                         Productos
                     </NavLink>
 
+                    <NavLink to="/asistente" className="nav-link">
+                        Asistente IA
+                    </NavLink>
+
                     {isAuthenticated && (
                         <NavLink to="/perfil" className="nav-link">
                             Perfil

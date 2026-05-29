@@ -29,6 +29,14 @@ export const apiRequest = async (endpoint, options = {}) => {
         headers.Authorization = `Bearer ${token}`
     }
 
+
+    const body = isFormData
+        ? options.body
+        : options.body && typeof options.body !== "string"
+            ? JSON.stringify(options.body)
+            : options.body;
+
+
     const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers

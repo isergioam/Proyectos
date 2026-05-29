@@ -12,13 +12,15 @@ import AdminProductEditPage from '../pages/AdminProductEditPage.jsx'
 import AdminCategoriesPage from '../pages/AdminCategoriesPage.jsx'
 import ProtectedRoute from '../components/ProtectedRoute.jsx'
 import AdminRoute from '../components/AdminRoute.jsx'
+import { AssistantPage } from '../pages/AssistantPage'
 
 function AppRouter() {
     return (
         <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/productos" element={<ProductsPage />} />
-            <Route path="/productos/:id" element={<ProductDetailPage />} />
+            <Route path='/' element={<HomePage />} />
+            <Route path='/productos' element={<ProductsPage />} />
+            <Route path='/productos/:id' element={<ProductDetailPage />} />
+            <Route path='/asistente' element={<AssistantPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
