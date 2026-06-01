@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getChallenges, createChallenge, updateChallenge, deleteChallenge } from '../api/challenges';
+import { getChallenges, createChallenge, updateChallenge, deleteChallenge, getParticipants } from '../api/challenges';
 import LoadingSpinner from '../components/LoadingSpinner';
 import MainLayout from '../layouts/MainLayout';
 import styles from './AdminPanel.module.css';
@@ -13,6 +13,9 @@ const AdminPanel = () => {
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState('');
+  const [selectedChallenge, setSelectedChallenge] = useState('');
+  const [participants, setParticipants] = useState([]);
+  const [participantsLoading, setParticipantsLoading] = useState(false);
 
   const loadChallenges = () => {
     getChallenges()
@@ -46,6 +49,23 @@ const AdminPanel = () => {
     try { await deleteChallenge(id); setMessage('Reto eliminado'); loadChallenges(); }
     catch (err) { setError(err.response?.data?.message || 'Error al eliminar'); }
   };
+
+  const loadParticipants = async (challengeId) => {
+    if (!challengeId) { setParticipants([]); return; }
+    setParticipantsLoading(true);
+    try {
+      const res = await getParticipants(challengeId);
+      setParticipants(res.data.data);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error al cargar participantes');
+    } finally {
+      setParticipantsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedChallenge) loadParticipants(selectedChallenge);
+  }, [selectedChallenge]);
 
   if (loading) return <MainLayout><LoadingSpinner /></MainLayout>;
 
@@ -126,6 +146,60 @@ const AdminPanel = () => {
               </tbody>
             </table>
           </div>
+        )}
+      </div>
+
+      <div className={styles.tableCard}>
+        <div className={styles.tableHeader}>
+          <h3 className={styles.tableTitle}>Revisar Participantes</h3>
+        </div>
+        <div className={styles.selectWrap}>
+          <select
+            value={selectedChallenge}
+            onChange={(e) => setSelectedChallenge(e.target.value)}
+            className={styles.select}
+          >
+            <option value="">Seleccionar un reto...</option>
+            {challenges.map((c) => (
+              <option key={c.id} value={c.id}>{c.title}</option>
+            ))}
+          </select>
+        </div>
+        {selectedChallenge && (
+          participantsLoading ? <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>Cargando participantes...</div> :
+          participants.length === 0 ? (
+            <div className={styles.emptyTable}>No hay participantes en este reto.</div>
+          ) : (
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th className={styles.th}>Usuario</th>
+                    <th className={styles.th}>Email</th>
+                    <th className={styles.th}>Estado</th>
+                    <th className={styles.th}>Días Completados</th>
+                    <th className={styles.th}>Fecha Ingreso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {participants.map((p) => (
+                    <tr key={p.id} className={styles.tr}>
+                      <td className={styles.td} style={{ fontWeight: 500 }}>{p.username}</td>
+                      <td className={styles.td}>{p.email}</td>
+                      <td className={styles.td}>
+                        <span style={{
+                          color: p.status === 'active' ? '#10b981' : p.status === 'completed' ? '#6366f1' : '#ef4444',
+                          fontWeight: 600, textTransform: 'capitalize',
+                        }}>{p.status}</span>
+                      </td>
+                      <td className={styles.td}>{p.days_completed}</td>
+                      <td className={styles.td}>{new Date(p.joined_at).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
         )}
       </div>
     </MainLayout>

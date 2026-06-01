@@ -208,6 +208,11 @@
   background: rgba(239,68,68,0.2);
 }
 
+.selectWrap {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
 .emptyTable {
   padding: 2rem;
   text-align: center;

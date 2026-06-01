@@ -9,6 +9,7 @@ const { challengeValidation } = require('../validations/challenges');
 router.get('/', challengeController.getAll);
 router.get('/my-challenges', authenticate, challengeController.getMyChallenges);
 router.get('/ranking/:id', rankingController.getRanking);
+router.get('/:id/participants', authenticate, authorize('admin'), challengeController.getParticipants);
 router.get('/:id', challengeController.getById);
 router.post('/', authenticate, authorize('admin'), challengeValidation, challengeController.create);
 router.put('/:id', authenticate, authorize('admin'), challengeValidation, challengeController.update);

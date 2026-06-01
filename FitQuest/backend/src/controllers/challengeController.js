@@ -85,4 +85,13 @@ const getMyChallenges = async (req, res, next) => {
   }
 };
 
-module.exports = { getAll, getById, create, update, remove, join, leave, getMyChallenges };
+const getParticipants = async (req, res, next) => {
+  try {
+    const participants = await participationService.getParticipants(req.params.id);
+    res.json({ success: true, data: participants });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getAll, getById, create, update, remove, join, leave, getMyChallenges, getParticipants };

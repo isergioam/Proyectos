@@ -9,3 +9,4 @@ export const joinChallenge = (id) => api.post(`/challenges/${id}/join`);
 export const leaveChallenge = (id) => api.delete(`/challenges/${id}/leave`);
 export const getMyChallenges = () => api.get('/challenges/my-challenges');
 export const getRanking = (id) => api.get(`/challenges/ranking/${id}`);
+export const getParticipants = (id) => api.get(`/challenges/${id}/participants`);

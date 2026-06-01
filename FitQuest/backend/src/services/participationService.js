@@ -57,4 +57,18 @@ const getMyChallenges = async (userId) => {
   return challenges;
 };
 
-module.exports = { join, leave, getMyChallenges };
+const getParticipants = async (challengeId) => {
+  const [participants] = await pool.query(
+    `SELECT u.id, u.username, u.email, cp.status, cp.joined_at,
+      (SELECT COUNT(*) FROM progress_logs pl WHERE pl.user_id = u.id AND pl.challenge_id = ?) as days_completed
+     FROM challenge_participants cp
+     INNER JOIN users u ON cp.user_id = u.id
+     WHERE cp.challenge_id = ?
+     ORDER BY cp.joined_at DESC`,
+    [challengeId, challengeId]
+  );
+
+  return participants;
+};
+
+module.exports = { join, leave, getMyChallenges, getParticipants };
