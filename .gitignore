@@ -5,6 +5,8 @@ Recetas/backend-recetas/node_modules/
 Recetas/frontend-recetas/node_modules/
 Documentos/backend-documentos/node_modules/
 Documentos/frontend-documentos/node_modules/
+FitQuest/backend/node_modules/
+FitQuest/frontend/node_modules/
 
 Tienda/frontend-tienda/npm-debug.log*
 Tienda/backend-tienda/npm-debug.log*
@@ -12,6 +14,8 @@ Recetas/frontend-recetas/npm-debug.log*
 Recetas/backend-recetas/npm-debug.log*
 Documentos/frontend-documentos/npm-debug.log*
 Documentos/backend-documentos/npm-debug.log*
+FitQuest/frontend/npm-debug.log*
+FitQuest/backend/npm-debug.log*
 
 Tienda/frontend-tienda/yarn-debug.log*
 Tienda/backend-tienda/yarn-debug.log*
@@ -19,6 +23,8 @@ Recetas/frontend-recetas/yarn-debug.log*
 Recetas/backend-recetas/yarn-debug.log*
 Documentos/frontend-documentos/yarn-debug.log*
 Documentos/backend-documentos/yarn-debug.log*
+FitQuest/frontend/yarn-debug.log*
+FitQuest/backend/yarn-debug.log*
 
 Tienda/frontend-tienda/yarn-error.log*
 Tienda/backend-tienda/yarn-error.log*
@@ -26,6 +32,8 @@ Recetas/frontend-recetas/yarn-error.log*
 Recetas/backend-recetas/yarn-error.log*
 Documentos/frontend-documentos/yarn-error.log*
 Documentos/backend-documentos/yarn-error.log*
+FitQuest/frontend/yarn-error.log*
+FitQuest/backend/yarn-error.log*
 
 # Environment variables
 Tienda/backend-tienda/.env
@@ -34,7 +42,8 @@ Recetas/backend-recetas/.env
 Recetas/frontend-recetas/.env
 Documentos/backend-documentos/.env
 Documentos/frontend-documentos/.env
-
+FitQuest/backend/.env
+FitQuest/frontend/.env
 
 # Build output
 Tienda/backend-tienda/dist/
@@ -43,6 +52,8 @@ Recetas/backend-recetas/dist/
 Recetas/frontend-recetas/dist/
 Documentos/backend-documentos/dist/
 Documentos/frontend-documentos/dist/
+FitQuest/backend/dist/
+FitQuest/frontend/dist/
 
 Tienda/backend-tienda/build/
 Tienda/frontend-tienda/build/
@@ -50,13 +61,17 @@ Recetas/backend-recetas/build/
 Recetas/frontend-recetas/build/
 Documentos/backend-documentos/build/
 Documentos/frontend-documentos/build/
+FitQuest/backend/build/
+FitQuest/frontend/build/
 
 Tienda/backend-tienda/*.tsbuildinfo
 Tienda/frontend-tienda/*.tsbuildinfo
-Recetas/backend-tienda/*.tsbuildinfo
-Recetas/frontend-tienda/*.tsbuildinfo
+Recetas/backend-recetas/*.tsbuildinfo
+Recetas/frontend-recetas/*.tsbuildinfo
 Documentos/backend-documentos/*.tsbuildinfo
 Documentos/frontend-documentos/*.tsbuildinfo
+FitQuest/backend/*.tsbuildinfo
+FitQuest/frontend/*.tsbuildinfo
 
 # Local development
 Tienda/backend-tienda/.vscode/
@@ -65,6 +80,8 @@ Recetas/backend-recetas/.vscode/
 Recetas/frontend-recetas/.vscode/
 Documentos/backend-documentos/.vscode/
 Documentos/frontend-documentos/.vscode/
+FitQuest/backend/.vscode/
+FitQuest/frontend/.vscode/
 
 Tienda/backend-tienda/.idea/
 Tienda/frontend-tienda/.idea/
@@ -72,6 +89,8 @@ Recetas/backend-recetas/.idea/
 Recetas/frontend-recetas/.idea/
 Documentos/backend-documentos/.idea/
 Documentos/frontend-documentos/.idea/
+FitQuest/backend/.idea/
+FitQuest/frontend/.idea/
 
 Tienda/backend-tienda/*.swp
 Tienda/frontend-tienda/*.swp
@@ -79,6 +98,8 @@ Recetas/backend-recetas/*.swp
 Recetas/frontend-recetas/*.swp
 Documentos/backend-documentos/*.swp
 Documentos/frontend-documentos/*.swp
+FitQuest/backend/*.swp
+FitQuest/frontend/*.swp
 
 # Coverage (if using Jest)
 Tienda/backend-tienda/coverage/
@@ -87,6 +108,8 @@ Recetas/backend-recetas/coverage/
 Recetas/frontend-recetas/coverage/
 Documentos/backend-documentos/coverage/
 Documentos/frontend-documentos/coverage/
+FitQuest/backend/coverage/
+FitQuest/frontend/coverage/
 
 Tienda/backend-tienda/.nyc_output/
 Tienda/frontend-tienda/.nyc_output/
@@ -94,8 +117,11 @@ Recetas/backend-recetas/.nyc_output/
 Recetas/frontend-recetas/.nyc_output/
 Documentos/backend-documentos/.nyc_output/
 Documentos/frontend-documentos/.nyc_output/
+FitQuest/backend/.nyc_output/
+FitQuest/frontend/.nyc_output/
 
 # Uploads (if applicable)
 Tienda/backend-tienda/src/uploads
 Recetas/backend-recetas/src/uploads
 Documentos/backend-documentos/src/uploads
+FitQuest/backend/src/uploads
