@@ -1,0 +1,54 @@
+@baseUrl = http://localhost:3000/api
+@user = sergio@email.com
+@password = 123456
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlNlcmdpbyIsImVtYWlsIjoic2VyZ2lvQGVtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MDI5OTkxOSwiZXhwIjoxNzgwMzAzNTE5fQ.bjPUHzIl32FFTmFe_v0jQ3opbYJc8CWgvVca32tU8xM
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{user}}",
+  "password": "{{password}}"
+}
+
+### Perfil autenticado
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{token}}
+
+### Health check
+GET {{baseUrl}}/health
+
+### Obtener todos los productos
+GET {{baseUrl}}/products
+
+### Obtener producto por ID
+GET {{baseUrl}}/products/1
+
+### Crear producto
+POST {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Teclado mecánico",
+  "description": "Teclado RGB para desarrollo web",
+  "price": 79.99,
+  "stock": 10
+}
+
+### Actualizar producto
+PUT {{baseUrl}}/products/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Teclado mecánico actualizado",
+  "description": "Teclado actualizado desde VSCode",
+  "price": 89.99,
+  "stock": 8
+}
+
+### Eliminar producto
+DELETE {{baseUrl}}/products/1
+Authorization: Bearer {{token}}
