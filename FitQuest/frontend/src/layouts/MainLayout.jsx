@@ -2,9 +2,14 @@ import Navbar from '../components/Navbar';
 
 const MainLayout = ({ children }) => {
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
       <Navbar />
-      <main style={{ padding: '1rem', maxWidth: '1200px', margin: '0 auto' }}>
+      <main style={{
+        maxWidth: '1100px',
+        margin: '0 auto',
+        padding: '2rem 1.5rem',
+        animation: 'fadeIn 0.4s ease forwards',
+      }}>
         {children}
       </main>
     </div>
