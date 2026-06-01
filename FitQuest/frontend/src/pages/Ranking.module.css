@@ -1,0 +1,163 @@
+.backBtn {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.15);
+  color: #6366f1;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.errorBox {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.15);
+  color: #ef4444;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.emptyIcon {
+  margin-bottom: 1rem;
+  opacity: 0.4;
+  color: #94a3b8;
+}
+
+.emptyText {
+  color: #94a3b8;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
+  cursor: default;
+}
+
+.row:hover {
+  background: #f8fafc;
+}
+
+.rowHighlight {
+  background: linear-gradient(135deg, rgba(245,158,11,0.04), rgba(245,158,11,0.01));
+}
+
+.rowHighlight:hover {
+  background: #f8fafc;
+}
+
+.rankBadge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.rankGold {
+  composes: rankBadge;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.rankSilver {
+  composes: rankBadge;
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.rankBronze {
+  composes: rankBadge;
+  background: linear-gradient(135deg, #b45309, #92400e);
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.rankDefault {
+  composes: rankBadge;
+  background: #f1f5f9;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.userInfo {
+  flex: 1;
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+  margin-bottom: 0.15rem;
+}
+
+.userDays {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.score {
+  text-align: right;
+}
+
+.scoreValue {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.scoreLabel {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin: 0.1rem 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

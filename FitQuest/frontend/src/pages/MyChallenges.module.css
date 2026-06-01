@@ -1,0 +1,212 @@
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  margin: -2rem -1.5rem 2rem;
+  padding: 4rem 1.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(99,102,241,0.1) 0%, transparent 60%),
+              radial-gradient(circle at 70% 50%, rgba(6,182,212,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.heroBadge {
+  background: rgba(16,185,129,0.15);
+  color: #34d399;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid rgba(16,185,129,0.2);
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.4rem;
+  line-height: 1.15;
+}
+
+.heroDesc {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.95rem;
+  max-width: 450px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.errorBox {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.15);
+  color: #ef4444;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+}
+
+.emptyIcon {
+  margin-bottom: 1rem;
+  opacity: 0.3;
+  color: #94a3b8;
+}
+
+.emptyText {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+.exploreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+  padding: 0.65rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+  transition: all 0.2s ease;
+}
+
+.exploreBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(99,102,241,0.4);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  transition: all 0.25s ease;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-color: #cbd5e1;
+}
+
+.imageWrap {
+  height: 100%;
+  min-height: 160px;
+  overflow: hidden;
+  position: relative;
+  background: #f1f5f9;
+}
+
+.imageWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .imageWrap img {
+  transform: scale(1.05);
+}
+
+.statusBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 16px;
+}
+
+.cardBody {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.actions {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.progressBtn {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.progressBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99,102,241,0.35);
+}
+
+.rankingBtn {
+  background: rgba(99,102,241,0.08);
+  color: #6366f1;
+  border: 1px solid rgba(99,102,241,0.2);
+  padding: 0.5rem 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.rankingBtn:hover {
+  background: rgba(99,102,241,0.15);
+}

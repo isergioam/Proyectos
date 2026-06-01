@@ -1,0 +1,130 @@
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  margin: -2rem -1.5rem 2rem;
+  padding: 4rem 1.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(99,102,241,0.12) 0%, transparent 60%),
+              radial-gradient(circle at 80% 50%, rgba(6,182,212,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.heroBadge {
+  background: rgba(99,102,241,0.2);
+  color: #818cf8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid rgba(99,102,241,0.25);
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  line-height: 1.15;
+}
+
+.heroDesc {
+  color: rgba(255,255,255,0.5);
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.filters {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  background: #fff;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  padding: 0.45rem 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.filterBtn:hover {
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.filterBtnActive {
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.2);
+}
+
+.errorBox {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.15);
+  color: #ef4444;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+}
+
+.emptyIcon {
+  margin-bottom: 1rem;
+  opacity: 0.3;
+  color: #94a3b8;
+}
+
+.emptyText {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+  animation: slideUp 0.5s ease forwards;
+}
+
+.cardWrapper {
+  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+}
