@@ -7,8 +7,14 @@ import healthRoutes from './routes/health.routes.js'
 import aiRoutes from './routes/ai.routes.js'
 import { notFound } from './middlewares/notFound.middleware.js'
 import { errorHandler } from './middlewares/error.middleware.js'
+import swaggerUi from 'swagger-ui-express'
+import YAML from 'yamljs'
 
 const app = express()
+
+const swaggerDocument = YAML.load('./src/docs/openapi.yaml')
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use(cors({
     origin: process.env.FRONTEND_URL
