@@ -1,0 +1,26 @@
+@baseUrl = http://localhost:3000/api
+
+### Solicitar recuperación de contraseña
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "admin@email.com"
+}
+
+### Restablecer contraseña
+POST {{baseUrl}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "PEGA_AQUI_EL_TOKEN",
+  "newPassword": "nueva123456"
+}
+
+### Verificar email
+POST {{baseUrl}}/auth/verify-email
+Content-Type: application/json
+
+{
+  "token": "PEGA_AQUI_EL_TOKEN"
+}

@@ -1,6 +1,11 @@
 import { createUser, findUserByEmail, findUserById } from '../services/auth.service.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import {
+    requestPasswordReset,
+    resetPassword,
+    verifyEmail
+} from '../services/auth.service.js'
 
 export const register = async (req, res, next) => {
     try {
@@ -93,6 +98,49 @@ export const profile = async (req, res, next) => {
                 role: user.role,
                 created_at: user.created_at
             }
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const forgotPasswordController = async (req, res, next) => {
+    try {
+        const { email } = req.body
+
+        await requestPasswordReset(email)
+
+        res.json({
+            message: 'Si el email existe, recibirás instrucciones para restablecer la contraseña'
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const resetPasswordController = async (req, res, next) => {
+    try {
+        const { token, newPassword } = req.body
+
+        await resetPassword({ token, newPassword })
+
+        res.json({
+            message: 'Contraseña actualizada correctamente'
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const verifyEmailController = async (req, res, next) => {
+    try {
+        const { token } = req.body
+
+        await verifyEmail(token)
+
+        res.json({
+            message: 'Email verificado correctamente'
         })
     } catch (error) {
         next(error)

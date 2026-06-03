@@ -29,6 +29,8 @@ app.use('/api', productsRoutes)
 app.use('/api', categoriesRoutes)
 app.use('/api', aiRoutes)
 
+app.use('/api', authRoutes)
+
 app.use(notFound)
 app.use(errorHandler)
 
