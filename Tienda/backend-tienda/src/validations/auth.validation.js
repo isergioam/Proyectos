@@ -35,8 +35,6 @@ export const loginValidation = [
         .withMessage('La contraseña es obligatoria')
 ]
 
-import { body } from 'express-validator'
-
 export const forgotPasswordValidation = [
     body('email')
         .isEmail()

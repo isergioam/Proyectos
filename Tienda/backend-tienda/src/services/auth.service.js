@@ -2,7 +2,14 @@ import { pool } from '../database/connection.js'
 import bcrypt from 'bcrypt'
 import { generatePlainToken, hashToken, addMinutes } from '../utils/token.util.js'
 import { sendEmail } from './mail.service.js'
-import { findUserByEmail, updateUserPassword, markEmailAsVerified } from './user.service.js'
+import { AppError } from '../utils/AppError.js'
+
+import {
+    findUserByEmail,
+    updateUserPassword,
+    markEmailAsVerified
+} from './user.service.js'
+
 import {
     createUserToken,
     findValidToken,
@@ -10,18 +17,15 @@ import {
     deleteUserTokensByType
 } from './user-token.service.js'
 
-export const findUserByEmail = async (email) => {
-    const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email])
-    return rows[0]
-}
-
 export const findUserById = async (id) => {
-    const [rows] = await pool.query('SELECT id, name, email, role, created_at FROM users WHERE id = ?', [id])
+    const [rows] = await pool.query(
+        'SELECT id, name, email, role, created_at FROM users WHERE id = ?',
+        [id]
+    )
     return rows[0]
 }
 
 export const createUser = async ({ name, email, password, role = 'user' }) => {
-    // Hash password with bcrypt
     const saltRounds = 10
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
@@ -41,9 +45,7 @@ export const createUser = async ({ name, email, password, role = 'user' }) => {
 export const requestPasswordReset = async (email) => {
     const user = await findUserByEmail(email)
 
-    if (!user) {
-        return
-    }
+    if (!user) return
 
     await deleteUserTokensByType({
         userId: user.id,
@@ -67,12 +69,12 @@ export const requestPasswordReset = async (email) => {
         to: user.email,
         subject: 'Recuperación de contraseña',
         html: `
-      <h1>Recuperación de contraseña</h1>
-      <p>Has solicitado restablecer tu contraseña.</p>
-      <p>Haz clic en el siguiente enlace:</p>
-      <a href="${resetUrl}">${resetUrl}</a>
-      <p>Este enlace caduca en 30 minutos.</p>
-    `
+            <h1>Recuperación de contraseña</h1>
+            <p>Has solicitado restablecer tu contraseña.</p>
+            <p>Haz clic en el siguiente enlace:</p>
+            <a href="${resetUrl}">${resetUrl}</a>
+            <p>Este enlace caduca en 30 minutos.</p>
+        `
     })
 }
 
@@ -121,12 +123,12 @@ export const sendEmailVerification = async (user) => {
         to: user.email,
         subject: 'Verifica tu cuenta',
         html: `
-      <h1>Verifica tu cuenta</h1>
-      <p>Gracias por registrarte.</p>
-      <p>Haz clic en el siguiente enlace para verificar tu email:</p>
-      <a href="${verifyUrl}">${verifyUrl}</a>
-      <p>Este enlace caduca en 24 horas.</p>
-    `
+            <h1>Verifica tu cuenta</h1>
+            <p>Gracias por registrarte.</p>
+            <p>Haz clic en el siguiente enlace para verificar tu email:</p>
+            <a href="${verifyUrl}">${verifyUrl}</a>
+            <p>Este enlace caduca en 24 horas.</p>
+        `
     })
 }
 
