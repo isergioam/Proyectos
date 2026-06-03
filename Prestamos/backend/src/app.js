@@ -2,6 +2,8 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const pool = require('./config/db')
+const objetosRoutes = require('./routes/objetos.routes')
+const prestamosRoutes = require('./routes/prestamos.routes')
 
 const app = express()
 
@@ -27,6 +29,9 @@ app.get('/api/health', async (req, res) => {
         })
     }
 })
+
+app.use('/api/objetos', objetosRoutes)
+app.use('/api/prestamos', prestamosRoutes)
 
 app.use((req, res) => {
     res.status(404).json({
