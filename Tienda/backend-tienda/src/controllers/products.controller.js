@@ -133,6 +133,23 @@ export const uploadProductImageController = async (req, res, next) => {
 
 export const createProductController = async (req, res, next) => {
     try {
+        const { name, price, stock } = req.body
+
+        if (!name || typeof name !== 'string') {
+            res.status(400).json({ message: 'El nombre es obligatorio' })
+            return
+        }
+
+        if (typeof price !== 'number') {
+            res.status(400).json({ message: 'El precio debe ser numérico' })
+            return
+        }
+
+        if (typeof stock !== 'number') {
+            res.status(400).json({ message: 'El stock debe ser numérico' })
+            return
+        }
+
         const product = await productService.createProduct(req.body)
 
         res.status(201).json(product)
