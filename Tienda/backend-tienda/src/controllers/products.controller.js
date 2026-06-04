@@ -1,12 +1,4 @@
-import {
-    countProductsWithFilters,
-    findProductById,
-    findProductsWithFilters,
-    insertProduct,
-    modifyProduct,
-    removeProduct,
-    updateProductImage
-} from '../services/products.service.js'
+import * as productService from '../services/product.service.js'
 
 export const getProducts = async (req, res, next) => {
     try {
@@ -132,6 +124,66 @@ export const uploadProductImageController = async (req, res, next) => {
             image: req.file.filename,
             imageUrl: `${req.protocol}://${req.get('host')}/uploads/products/${req.file.filename}`
         })
+    } catch (error) {
+        next(error)
+    }
+}
+
+/* CONSULTAS CON PRISMA */
+
+export const createProductController = async (req, res, next) => {
+    try {
+        const product = await productService.createProduct(req.body)
+
+        res.status(201).json(product)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getProductsController = async (req, res, next) => {
+    try {
+        const products = await productService.findAllProducts()
+
+        res.json(products)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getProductByIdController = async (req, res, next) => {
+    try {
+        const product = await productService.findProductById(req.params.id)
+
+        if (!product) {
+            res.status(404).json({ message: 'Producto no encontrado' })
+            return
+        }
+
+        res.json(product)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updateProductController = async (req, res, next) => {
+    try {
+        const product = await productService.updateProduct({
+            id: req.params.id,
+            data: req.body
+        })
+
+        res.json(product)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteProductController = async (req, res, next) => {
+    try {
+        await productService.deleteProduct(req.params.id)
+
+        res.json({ message: 'Producto eliminado correctamente' })
     } catch (error) {
         next(error)
     }

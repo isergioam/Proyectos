@@ -1,4 +1,5 @@
 import { pool } from '../database/connection.js'
+import { prisma } from '../config/prisma.js'
 
 export const findProductsWithFilters = async ({ search, minPrice, maxPrice, inStock, limit, offset }) => {
     const conditions = []
@@ -70,7 +71,7 @@ export const countProductsWithFilters = async ({ search, minPrice, maxPrice, inS
 
     return rows[0].total
 }
-
+/*
 export const findProductById = async (id) => {
     const [rows] = await pool.query(
         `SELECT p.*, c.name AS category
@@ -82,7 +83,7 @@ export const findProductById = async (id) => {
 
     return rows[0]
 }
-
+*/
 export const insertProduct = async ({ name, description, price, stock, categoryId }) => {
     const [result] = await pool.query(
         `INSERT INTO products(name, description, price, stock, category_id)
@@ -123,4 +124,67 @@ export const updateProductImage = async (id, image) => {
     )
 
     return result.affectedRows
+}
+/* CONSULTAS CON PRISMA */
+export const createProduct = async (data) => {
+    return prisma.product.create({
+        data: {
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            stock: data.stock
+        }
+    })
+}
+
+export const findAllProducts = async () => {
+    return prisma.product.findMany({
+        where: {
+            isActive: true
+        },
+        orderBy: {
+            id: 'desc'
+        }
+    })
+}
+
+export const findProductById = async (id) => {
+    return prisma.product.findUnique({
+        where: {
+            id: Number(id)
+        }
+    })
+}
+
+export const updateProduct = async ({ id, data }) => {
+    return prisma.product.update({
+        where: {
+            id: Number(id)
+        },
+        data: {
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            stock: data.stock
+        }
+    })
+}
+/*
+export const hardDeleteProduct = async (id) => {
+    return prisma.product.delete({
+        where: {
+            id: Number(id)
+        }
+    })
+}*/
+
+export const deleteProduct = async (id) => {
+    return prisma.product.update({
+        where: {
+            id: Number(id)
+        },
+        data: {
+            isActive: false
+        }
+    })
 }
