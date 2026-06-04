@@ -24,21 +24,12 @@ import {
 
 const router = Router()
 
-/* RUTAS DE MONGOOSE 
 router.get('/products', productsQueryValidation, validateRequest, getProducts)
 router.get('/products/:id', productIdValidation, validateRequest, getProductById)
 router.post('/products', authMiddleware, allowRoles('admin'), createProductValidation, validateRequest, createProduct)
 router.put('/products/:id', authMiddleware, allowRoles('admin'), productIdValidation, createProductValidation, validateRequest, updateProduct)
 router.delete('/products/:id', authMiddleware, allowRoles('admin'), productIdValidation, validateRequest, deleteProduct)
 router.patch('/products/:id/image', authMiddleware, allowRoles('admin'), productIdValidation, validateRequest, uploadProductImage.single('image'), uploadProductImageController)
-*/
-
-/* RUTAS DE PRISMA */
-router.get('/products', getProductsController)
-router.get('/products/:id', getProductByIdController)
-router.post('/products', createProductController)
-router.patch('/products/:id', updateProductController)
-router.delete('/products/:id', deleteProductController)
 
 
 export default router

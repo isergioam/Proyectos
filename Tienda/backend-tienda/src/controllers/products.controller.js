@@ -1,4 +1,12 @@
-import * as productService from '../services/product.service.js'
+import {
+    findProductsWithFilters,
+    countProductsWithFilters,
+    findProductById,
+    insertProduct,
+    modifyProduct,
+    removeProduct,
+    updateProductImage
+} from '../services/products.service.js'
 
 export const getProducts = async (req, res, next) => {
     try {

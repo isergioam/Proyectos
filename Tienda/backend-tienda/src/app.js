@@ -5,7 +5,6 @@ import productsRoutes from './routes/products.routes.js'
 import categoriesRoutes from './routes/categories.routes.js'
 import healthRoutes from './routes/health.routes.js'
 import aiRoutes from './routes/ai.routes.js'
-import productRoutes from './routes/product.routes.js'
 import { notFound } from './middlewares/notFound.middleware.js'
 import { errorHandler } from './middlewares/error.middleware.js'
 import swaggerUi from 'swagger-ui-express'
@@ -29,10 +28,6 @@ app.use('/api', authRoutes)
 app.use('/api', productsRoutes)
 app.use('/api', categoriesRoutes)
 app.use('/api', aiRoutes)
-
-app.use('/api', authRoutes)
-
-app.use('/api', productRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
