@@ -47,12 +47,39 @@ function ObjetosPage() {
     async function handleSubmit(event) {
         event.preventDefault()
 
+        const nombre = form.nombre.trim()
+        const descripcion = form.descripcion.trim()
+
+        if (!nombre) {
+            setToast({
+                type: 'error',
+                message: 'Debes escribir un nombre para el objeto.'
+            })
+            return
+        }
+
+        if (nombre.length > 120) {
+            setToast({
+                type: 'error',
+                message: 'El nombre no puede superar los 120 caracteres.'
+            })
+            return
+        }
+
+        if (descripcion.length > 255) {
+            setToast({
+                type: 'error',
+                message: 'La descripción no puede superar los 255 caracteres.'
+            })
+            return
+        }
+
         try {
             setSubmitting(true)
 
             await createObjeto({
-                nombre: form.nombre,
-                descripcion: form.descripcion
+                nombre,
+                descripcion
             })
 
             setForm({
@@ -111,10 +138,10 @@ function ObjetosPage() {
     return (
         <Container>
             <div className="page-header">
-                <p className="eyebrow">Fase 5</p>
+                <p className="eyebrow">Fase 7</p>
                 <h1>Gestión de objetos</h1>
                 <p className="lead">
-                    Esta pantalla consume la API real para listar, crear y borrar objetos.
+                    Pantalla revisada y pulida para la entrega final del proyecto.
                 </p>
             </div>
 
@@ -134,10 +161,26 @@ function ObjetosPage() {
                             id="nombre"
                             name="nombre"
                             type="text"
+                            maxLength="120"
                             value={form.nombre}
                             onChange={handleChange}
                             placeholder="Ejemplo: Taladro"
                         />
+                        <small className="helper-text">Máximo 120 caracteres.</small>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="prestamista_nombre">Prestamista</label>
+                        <input
+                            id="prestamista_nombre"
+                            name="prestamista_nombre"
+                            type="text"
+                            maxLength="120"
+                            value={form.prestamista_nombre}
+                            onChange={handleChange}
+                            placeholder="Ejemplo: Paco"
+                        />
+                        <small className="helper-text">Máximo 120 caracteres.</small>
                     </div>
 
                     <div className="form-group">
@@ -146,10 +189,12 @@ function ObjetosPage() {
                             id="descripcion"
                             name="descripcion"
                             rows="4"
+                            maxLength="255"
                             value={form.descripcion}
                             onChange={handleChange}
                             placeholder="Ejemplo: Taladro negro de batería"
                         />
+                        <small className="helper-text">Máximo 255 caracteres.</small>
                     </div>
 
                     <button type="submit" disabled={submitting}>
@@ -172,6 +217,7 @@ function ObjetosPage() {
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
+                                    <th>Prestamista</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
@@ -182,6 +228,7 @@ function ObjetosPage() {
                                     <tr key={objeto.id}>
                                         <td>{objeto.id}</td>
                                         <td>{objeto.nombre}</td>
+                                        <td>{objeto.prestamista_nombre}</td>
                                         <td>{objeto.descripcion || '—'}</td>
                                         <td>
                                             <span className={`badge badge-${objeto.estado.toLowerCase()}`}>
@@ -192,6 +239,7 @@ function ObjetosPage() {
                                             <button
                                                 type="button"
                                                 className="danger-button"
+                                                disabled={objeto.estado === 'PRESTADO'}
                                                 onClick={() => handleDelete(objeto.id, objeto.estado)}
                                             >
                                                 Eliminar

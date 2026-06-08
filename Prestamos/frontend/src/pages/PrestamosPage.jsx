@@ -82,16 +82,48 @@ function PrestamosPage() {
     async function handleSubmit(event) {
         event.preventDefault()
 
+        if (!form.objeto_id) {
+            setToast({
+                type: 'error',
+                message: 'Debes seleccionar un objeto disponible.'
+            })
+            return
+        }
+
+        if (!form.prestamista_nombre.trim()) {
+            setToast({
+                type: 'error',
+                message: 'Debes escribir el nombre del prestamista.'
+            })
+            return
+        }
+
+        if (!form.prestatario_nombre.trim()) {
+            setToast({
+                type: 'error',
+                message: 'Debes escribir el nombre del prestatario.'
+            })
+            return
+        }
+
+        if (!form.fecha_prestamo) {
+            setToast({
+                type: 'error',
+                message: 'Debes indicar la fecha de préstamo.'
+            })
+            return
+        }
+
         try {
             setSubmitting(true)
 
             await createPrestamo({
                 objeto_id: Number(form.objeto_id),
-                prestamista_nombre: form.prestamista_nombre,
-                prestatario_nombre: form.prestatario_nombre,
+                prestamista_nombre: form.prestamista_nombre.trim(),
+                prestatario_nombre: form.prestatario_nombre.trim(),
                 fecha_prestamo: form.fecha_prestamo,
                 fecha_devolucion_prevista: form.fecha_devolucion_prevista || null,
-                notas: form.notas
+                notas: form.notas.trim()
             })
 
             setForm({
@@ -152,10 +184,10 @@ function PrestamosPage() {
     return (
         <Container>
             <div className="page-header">
-                <p className="eyebrow">Fase 6</p>
+                <p className="eyebrow">Fase 7</p>
                 <h1>Gestión de préstamos</h1>
                 <p className="lead">
-                    Esta pantalla consume la API real para crear y devolver préstamos.
+                    Pantalla revisada y pulida para la entrega final del proyecto.
                 </p>
             </div>
 
@@ -191,23 +223,12 @@ function PrestamosPage() {
                             </div>
 
                             <div className="form-group">
-                                <label htmlFor="prestamista_nombre">Prestamista</label>
-                                <input
-                                    id="prestamista_nombre"
-                                    name="prestamista_nombre"
-                                    type="text"
-                                    value={form.prestamista_nombre}
-                                    onChange={handleChange}
-                                    placeholder="Ejemplo: Paco"
-                                />
-                            </div>
-
-                            <div className="form-group">
                                 <label htmlFor="prestatario_nombre">Prestatario</label>
                                 <input
                                     id="prestatario_nombre"
                                     name="prestatario_nombre"
                                     type="text"
+                                    maxLength="120"
                                     value={form.prestatario_nombre}
                                     onChange={handleChange}
                                     placeholder="Ejemplo: Laura"
@@ -243,10 +264,12 @@ function PrestamosPage() {
                                 id="notas"
                                 name="notas"
                                 rows="4"
+                                maxLength="255"
                                 value={form.notas}
                                 onChange={handleChange}
                                 placeholder="Ejemplo: Entregar con cargador"
                             />
+                            <small className="helper-text">Máximo 255 caracteres.</small>
                         </div>
 
                         <button type="submit" disabled={submitting}>

@@ -45,6 +45,18 @@ async function createPrestamo(req, res) {
             throw httpError(400, 'La fecha de prestamo es obligatoria.')
         }
 
+        if (prestamista_nombre.trim().length > 120) {
+            throw httpError(400, 'El nombre del prestamista no puede superar los 120 caracteres.')
+        }
+
+        if (prestatario_nombre.trim().length > 120) {
+            throw httpError(400, 'El nombre del prestatario no puede superar los 120 caracteres.')
+        }
+
+        if ((notas || '').trim().length > 255) {
+            throw httpError(400, 'Las notas no pueden superar los 255 caracteres.')
+        }
+
         const objeto = await objetosModel.getObjetoById(Number(objeto_id))
 
         if (!objeto) {

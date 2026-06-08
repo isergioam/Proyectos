@@ -99,6 +99,11 @@ body {
     gap: 8px;
 }
 
+.helper-text {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
 label {
     font-weight: 600;
 }

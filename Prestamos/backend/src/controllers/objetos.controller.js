@@ -18,6 +18,7 @@ async function createObjeto(req, res) {
     try {
         const nombre = (req.body.nombre || '').trim()
         const descripcion = (req.body.descripcion || '').trim()
+        const prestamista_nombre = (req.body.prestamista_nombre || '').trim()
 
         if (!nombre) {
             return res.status(400).json({
@@ -25,9 +26,28 @@ async function createObjeto(req, res) {
             })
         }
 
+        if (prestamista_nombre.length > 120) {
+            return res.status(400).json({
+                error: 'El prestamista no puede superar los 120 caracteres.'
+            })
+        }
+
+        if (nombre.length > 120) {
+            return res.status(400).json({
+                error: 'El nombre del objeto no puede superar los 120 caracteres.'
+            })
+        }
+
+        if (descripcion.length > 255) {
+            return res.status(400).json({
+                error: 'La descripción no puede superar los 255 caracteres.'
+            })
+        }
+
         const objeto = await objetosModel.createObjeto({
             nombre,
-            descripcion
+            descripcion,
+            prestamista_nombre
         })
 
         res.status(201).json(objeto)
