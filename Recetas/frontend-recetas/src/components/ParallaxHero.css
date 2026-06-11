@@ -1,0 +1,184 @@
+.parallax-hero {
+    position: relative;
+    height: 380px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: var(--shadow-medium);
+    border: 1px solid rgba(235, 220, 208, 0.4);
+    background-color: #2e2620;
+}
+
+.parallax-hero-bg {
+    position: absolute;
+    top: -15%;
+    left: 0;
+    width: 100%;
+    height: 130%;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    z-index: 1;
+}
+
+.parallax-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(46, 38, 32, 0.2) 0%,
+        rgba(46, 38, 32, 0.75) 100%
+    );
+    z-index: 2;
+}
+
+.parallax-float {
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.25));
+    will-change: transform;
+    z-index: 3;
+    transition: transform 0.1s ease-out;
+}
+
+/* Coordinates for floating elements */
+.item-tomato {
+    top: 15%;
+    left: 8%;
+    font-size: 3.5rem;
+}
+
+.item-basil {
+    top: 18%;
+    right: 10%;
+    font-size: 3.2rem;
+}
+
+.item-garlic {
+    bottom: 20%;
+    left: 12%;
+    font-size: 2.8rem;
+}
+
+.item-cheese {
+    bottom: 15%;
+    right: 15%;
+    font-size: 3.4rem;
+}
+
+.item-avocado {
+    top: 48%;
+    left: 84%;
+    font-size: 3.6rem;
+}
+
+.parallax-hero-content {
+    position: relative;
+    z-index: 4;
+    color: white;
+    max-width: 680px;
+    padding: 0 24px;
+    will-change: transform;
+    transition: transform 0.1s ease-out;
+}
+
+.parallax-hero-badge {
+    background: rgba(224, 106, 59, 0.9);
+    padding: 6px 18px;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: inline-block;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 10px rgba(224, 106, 59, 0.2);
+}
+
+.parallax-hero-title {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    font-weight: 800;
+    margin: 0 0 14px 0;
+    line-height: 1.15;
+    text-shadow: 0 2px 8px rgba(46, 38, 32, 0.5);
+    color: #ffffff;
+}
+
+.parallax-hero-subtitle {
+    font-size: 15px;
+    margin: 0 0 28px 0;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 4px rgba(46, 38, 32, 0.6);
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.parallax-hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.btn-parallax-primary {
+    background-color: var(--brand-primary);
+    color: white !important;
+    padding: 12px 28px;
+    border-radius: 0;
+    font-weight: 600;
+    font-size: 14px;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 15px rgba(224, 106, 59, 0.35);
+}
+
+.btn-parallax-primary:hover {
+    background-color: var(--brand-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(224, 106, 59, 0.45);
+}
+
+.btn-parallax-secondary {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white !important;
+    padding: 12px 28px;
+    border-radius: 0;
+    font-weight: 600;
+    font-size: 14px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: var(--transition-smooth);
+}
+
+.btn-parallax-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .parallax-hero {
+        height: 320px;
+    }
+
+    .parallax-hero-title {
+        font-size: 32px;
+    }
+
+    .parallax-hero-subtitle {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    /* Hide some floating food items on smaller screens to avoid clutter */
+    .parallax-float {
+        display: none;
+    }
+}

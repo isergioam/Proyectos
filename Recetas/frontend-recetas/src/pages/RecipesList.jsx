@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "../api.js";
 import Stars from "../components/Stars.jsx";
 import Pagination from "../components/Pagination.jsx";
+import ParallaxHero from "../components/ParallaxHero.jsx";
 
 const LIMIT = 10;
 
@@ -81,7 +82,9 @@ export default function RecipesList() {
     }
 
     return (
-        <section className="card">
+        <>
+            <ParallaxHero />
+            <section className="card" id="list-section">
             <h2>Listado</h2>
 
             <div className="filters">
@@ -217,6 +220,7 @@ export default function RecipesList() {
                     />
                 </>
             )}
-        </section>
+            </section>
+        </>
     );
 }

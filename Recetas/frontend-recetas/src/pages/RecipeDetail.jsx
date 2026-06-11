@@ -14,6 +14,22 @@ export default function RecipeDetail({ id }) {
 
     const [comment, setComment] = useState("");
     const [stars, setStars] = useState(0);
+    const [scrollY, setScrollY] = useState(0);
+
+    useEffect(() => {
+        let ticking = false;
+        const handleScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    setScrollY(window.scrollY);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     async function load() {
         try {
@@ -77,6 +93,10 @@ export default function RecipeDetail({ id }) {
                         src={recipe.foto_url && recipe.foto_url.trim() !== "" ? recipe.foto_url : "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&auto=format&fit=crop&q=80"} 
                         alt={recipe.titulo}
                         className="hero-img"
+                        style={{
+                            transform: `translate3d(0, ${scrollY * 0.25}px, 0) scale(1.15)`,
+                            transformOrigin: "center center"
+                        }}
                         onError={(e) => {
                             e.target.src = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&auto=format&fit=crop&q=80";
                         }}

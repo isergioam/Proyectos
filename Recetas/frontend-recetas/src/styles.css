@@ -30,9 +30,9 @@
     
     --shadow-soft: 0 4px 20px rgba(74, 58, 46, 0.04);
     --shadow-medium: 0 8px 30px rgba(74, 58, 46, 0.08);
-    --radius-sm: 8px;
-    --radius-md: 16px;
-    --radius-lg: 24px;
+    --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-lg: 0px;
     
     --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,44 +73,30 @@ a:hover {
 .topbar {
     display: flex;
     align-items: center;
-    justify-content: flex-between;
+    justify-content: space-between;
     flex-wrap: wrap;
     gap: 24px;
     margin-bottom: 40px;
-    background: var(--bg-card);
-    padding: 24px 32px;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(235, 220, 208, 0.4);
-}
-
-@media (min-width: 768px) {
-    .topbar {
-        justify-content: space-between;
-    }
+    background: transparent;
+    padding: 24px 0;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 16px;
 }
 
 .brand-logo {
-    font-size: 38px;
-    background: #fdf5ef;
-    padding: 8px;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(224, 106, 59, 0.1);
+    font-size: 34px;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    animation: rotateSlow 20s linear infinite;
-}
-
-@keyframes rotateSlow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
 }
 
 .brand h1 {
@@ -132,38 +118,67 @@ a:hover {
 .nav {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 28px;
 }
 
 .nav a {
     font-size: 15px;
     font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 99px;
+    padding: 8px 0;
+    border-radius: 0;
     transition: var(--transition-fast);
     color: var(--color-text-dark);
+    position: relative;
+}
+
+.nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -24px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--brand-primary);
+    transition: var(--transition-fast);
+}
+
+@media (max-width: 768px) {
+    .nav a::after {
+        bottom: -4px;
+    }
+}
+
+.nav a:hover::after,
+.nav a.active::after {
+    width: 100%;
 }
 
 .nav a:hover {
-    background-color: #faf7f2;
+    background-color: transparent;
     color: var(--brand-primary);
 }
 
 .nav a.active {
-    background-color: #fdf5ef;
+    background-color: transparent;
     color: var(--brand-primary);
 }
 
 .nav a.btn-create {
     background-color: var(--brand-primary);
     color: white !important;
-    box-shadow: 0 4px 12px rgba(224, 106, 59, 0.2);
+    padding: 10px 20px;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.nav a.btn-create::after {
+    display: none;
 }
 
 .nav a.btn-create:hover {
     background-color: var(--brand-primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(224, 106, 59, 0.3);
+    transform: none;
+    box-shadow: none;
 }
 
 /* ==========================================
@@ -197,7 +212,7 @@ a:hover {
     width: 40px;
     height: 3px;
     background-color: var(--brand-primary);
-    border-radius: 9px;
+    border-radius: 0;
 }
 
 /* ==========================================
@@ -314,7 +329,7 @@ a:hover {
     font-weight: 700;
     text-transform: uppercase;
     padding: 6px 12px;
-    border-radius: 99px;
+    border-radius: 0;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     letter-spacing: 0.5px;
 }
@@ -384,7 +399,7 @@ a:hover {
     background: #f7f3ed;
     color: var(--color-text-muted);
     padding: 4px 10px;
-    border-radius: 99px;
+    border-radius: 0;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -439,7 +454,7 @@ a:hover {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     padding: 10px 18px;
-    border-radius: 99px;
+    border-radius: 0;
     font-family: var(--font-sans);
     font-weight: 600;
     color: var(--color-text-muted);
@@ -483,15 +498,17 @@ a:hover {
     font-size: 14px;
     font-weight: 600;
     color: var(--color-text-muted);
-    background-color: rgba(235, 220, 208, 0.3);
-    padding: 8px 18px;
-    border-radius: 99px;
+    background-color: transparent;
+    padding: 8px 0;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
 }
 
 .btn-back:hover {
-    background-color: rgba(235, 220, 208, 0.6);
+    background-color: transparent;
     color: var(--brand-primary);
-    transform: translateX(-2px);
+    border-bottom-color: var(--brand-primary);
+    transform: translateX(-4px);
 }
 
 .recipe-hero {
@@ -507,12 +524,15 @@ a:hover {
     width: 100%;
     height: 380px;
     background-color: #ebdcd0;
+    overflow: hidden;
 }
 
 .hero-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    will-change: transform;
+    transition: transform 0.1s ease-out;
 }
 
 .hero-grad {
@@ -556,7 +576,7 @@ a:hover {
     font-weight: 700;
     text-transform: uppercase;
     padding: 6px 14px;
-    border-radius: 99px;
+    border-radius: 0;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     letter-spacing: 0.8px;
 }
@@ -599,7 +619,7 @@ a:hover {
     font-size: 26px;
     background-color: #faf7f2;
     padding: 8px;
-    border-radius: 50%;
+    border-radius: 0;
     display: inline-flex;
 }
 
@@ -703,7 +723,7 @@ a:hover {
     width: 20px;
     background-color: white;
     border: 2px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 0;
     transition: var(--transition-fast);
     flex-shrink: 0;
 }
@@ -799,7 +819,7 @@ a:hover {
     height: 26px;
     background-color: var(--brand-primary);
     color: white;
-    border-radius: 50%;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -993,7 +1013,7 @@ a:hover {
 .comment-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 0;
     background-color: #fdf5ef;
     border: 1px solid var(--border-color);
     color: var(--brand-primary);
@@ -1214,10 +1234,10 @@ a:hover {
     font-weight: 700;
     font-size: 16px;
     padding: 16px 36px;
-    border-radius: 99px;
+    border-radius: 0;
     cursor: pointer;
     transition: var(--transition-fast);
-    box-shadow: 0 4px 16px rgba(224, 106, 59, 0.3);
+    box-shadow: none;
 }
 
 .btn-submit-recipe:hover {
