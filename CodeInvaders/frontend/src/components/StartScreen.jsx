@@ -66,10 +66,13 @@ function StartScreen({ onStart, onShowRanking, config }) {
                 </button>
 
                 <div className="controls-box">
-                    <h3>Controles</h3>
+                    <h3>Controles e Instrucciones</h3>
                     <p><strong>WASD</strong> o <strong>flechas</strong>: mover nave</p>
                     <p><strong>Espacio</strong>: disparar</p>
                     <p><strong>P</strong>: pausar o continuar</p>
+                    <p style={{ marginTop: '12px', color: '#fb7185', fontSize: '13px', fontWeight: 'bold' }}>
+                        ⚠️ ¡Cuidado! Los bugs disparan excepciones destructivas de color rojo.
+                    </p>
                 </div>
             </div>
         </section>

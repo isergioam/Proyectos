@@ -1,5 +1,21 @@
 [
   {
+    "id": "1783338018794-83de5a91f53b68",
+    "playerName": "Team Sergio",
+    "score": 2700,
+    "wave": 10,
+    "duration": 229,
+    "createdAt": "2026-07-06T11:40:18.794Z"
+  },
+  {
+    "id": "1783337321722-afaf25c9dd181",
+    "playerName": "AAAA",
+    "score": 2100,
+    "wave": 8,
+    "duration": 225,
+    "createdAt": "2026-07-06T11:28:41.722Z"
+  },
+  {
     "id": "1783335285239-d662f13cc42bf",
     "playerName": "TEAM TEAM",
     "score": 1260,

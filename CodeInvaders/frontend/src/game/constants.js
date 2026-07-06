@@ -17,6 +17,13 @@ export const ENEMY_HEIGHT = 34;
 export const ENEMY_BASE_SPEED = 2;
 export const ENEMY_SPAWN_INTERVAL = 1600;
 
+export const ENEMY_BULLET_WIDTH = 5;
+export const ENEMY_BULLET_HEIGHT = 12;
+export const ENEMY_BULLET_SPEED = 4.5;
+
+export const BOSS_WIDTH = 120;
+export const BOSS_HEIGHT = 50;
+
 export const WAVE_SCORE_STEP = 300;
 
 export const POWERUP_WIDTH = 30;

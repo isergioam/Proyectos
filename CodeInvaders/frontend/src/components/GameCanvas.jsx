@@ -19,9 +19,27 @@ import {
     POWERUP_DURATION,
     POWERUP_HEIGHT,
     POWERUP_SPAWN_INTERVAL,
-    POWERUP_WIDTH
+    POWERUP_WIDTH,
+    ENEMY_BULLET_HEIGHT,
+    ENEMY_BULLET_SPEED,
+    ENEMY_BULLET_WIDTH,
+    BOSS_HEIGHT,
+    BOSS_WIDTH
 } from '../game/constants';
 import { isColliding } from '../game/collisions';
+import {
+    playShootSound,
+    playExplosionSound,
+    playHitSound,
+    playPowerupSound
+} from '../game/audio';
+
+const CODE_SNIPPETS = [
+    'const', 'let', 'function', '=>', '&&', '||', 'return', 'null', 'true', 'false',
+    'import', 'export', 'await', 'async', 'class', 'super', 'new', 'try', 'catch',
+    'throw', 'if', 'else', 'map', 'filter', 'reduce', 'const [state, setState]',
+    'useEffect', 'useRef', 'fetch', 'res.json()', 'app.listen()', 'CORS', 'NaN'
+];
 
 function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange }) {
     const canvasRef = useRef(null);
@@ -134,10 +152,28 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
                 speed: PLAYER_SPEED
             },
             bullets: [],
+            enemyBullets: [],
             enemies: [],
             particles: [],
             lastPowerUpSpawnAt: 0,
             powerUps: [],
+            screenShakeTime: 0,
+            boss: null,
+            bossActive: false,
+            comboCount: 1,
+            lastEnemyKilledAt: 0,
+            floatingTexts: [],
+            damageFlashTime: 0,
+            waveBannerText: 'OLEADA 1',
+            waveBannerTime: 120,
+            backgroundCode: Array.from({ length: 18 }, () => ({
+                text: CODE_SNIPPETS[Math.floor(Math.random() * CODE_SNIPPETS.length)],
+                x: Math.random() * CANVAS_WIDTH,
+                y: Math.random() * CANVAS_HEIGHT,
+                speed: Math.random() * 0.6 + 0.3,
+                opacity: Math.random() * 0.09 + 0.03,
+                fontSize: Math.floor(Math.random() * 6) + 11
+            })),
             activePowerUps: {
                 speedUntil: 0,
                 shieldUntil: 0,
@@ -152,15 +188,32 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         updateShooting(game, keys, currentTime);
         updateBullets(game, deltaTime);
         spawnEnemies(game, currentTime);
+        updateEnemyShooting(game, currentTime);
+        updateEnemyBullets(game, deltaTime);
         updateEnemies(game, deltaTime);
         updateParticles(game, deltaTime);
         checkBulletEnemyCollisions(game);
         checkEnemyPlayerCollisions(game, currentTime);
+        checkEnemyBulletPlayerCollisions(game, currentTime);
         checkEnemiesThatPassThePlayer(game);
         checkGameOver(game);
         spawnPowerUps(game, currentTime);
         updatePowerUps(game, deltaTime);
         checkPlayerPowerUpCollisions(game, currentTime);
+        updateBackgroundCode(game, deltaTime);
+        updateFloatingTexts(game, deltaTime);
+
+        if (game.waveBannerTime > 0) {
+            game.waveBannerTime -= deltaTime;
+        }
+
+        if (game.damageFlashTime > 0) {
+            game.damageFlashTime -= deltaTime * 0.6;
+        }
+
+        if (game.screenShakeTime > 0) {
+            game.screenShakeTime -= deltaTime;
+        }
     }
 
     function spawnPowerUps(game, currentTime) {
@@ -206,6 +259,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
     }
 
     function applyPowerUp(game, powerUp, currentTime) {
+        playPowerupSound();
         if (powerUp.type === 'heart') {
             game.lives = Math.min(game.lives + 1, 5);
         }
@@ -228,6 +282,8 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
         if (newWave > game.wave) {
             game.wave = newWave;
+            game.waveBannerText = newWave % 5 === 0 ? `¡ALERTA: OLEADA ${newWave} (JEFE)!` : `INICIANDO OLEADA ${newWave}`;
+            game.waveBannerTime = 120;
         }
     }
 
@@ -255,6 +311,19 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
         player.x = clamp(player.x, 0, CANVAS_WIDTH - player.width);
         player.y = clamp(player.y, 0, CANVAS_HEIGHT - player.height);
+
+        // Engine particles (engine trail)
+        if (Math.random() < 0.35) {
+            game.particles.push({
+                x: player.x + player.width / 2 + (Math.random() * 12 - 6),
+                y: player.y + player.height - 8,
+                size: Math.random() * 3 + 1.5,
+                vx: Math.random() * 2 - 1,
+                vy: Math.random() * 2 + 1.5, // moves down
+                life: Math.random() * 12 + 6,
+                color: Math.random() > 0.4 ? '#22d3ee' : '#38bdf8'
+            });
+        }
     }
 
     function updateShooting(game, keys, currentTime) {
@@ -269,6 +338,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         }
 
         game.lastShotAt = currentTime;
+        playShootSound();
 
         const hasTriple = currentTime < game.activePowerUps.tripleShotUntil;
 
@@ -324,6 +394,32 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
     }
 
     function spawnEnemies(game, currentTime) {
+        // If it's a boss wave (every 5 waves)
+        if (game.wave % 5 === 0) {
+            if (!game.bossActive && game.boss === null) {
+                // Wait until all normal enemies are cleared before spawning the boss
+                if (game.enemies.length === 0) {
+                    game.bossActive = true;
+                    game.boss = {
+                        x: CANVAS_WIDTH / 2 - BOSS_WIDTH / 2,
+                        y: -BOSS_HEIGHT,
+                        width: BOSS_WIDTH,
+                        height: BOSS_HEIGHT,
+                        maxLife: 20 + game.wave * 12,
+                        life: 20 + game.wave * 12,
+                        label: game.wave % 10 === 0 ? 'SEGMENTATION_FAULT' : 'STACK_OVERFLOW',
+                        color: '#ec4899', // bright pink
+                        speed: 1.8,
+                        directionX: 1,
+                        lastShotAt: currentTime,
+                        shootInterval: 1200 - (game.wave * 30), // shoots faster in later boss fights
+                        shootPattern: 0
+                    };
+                }
+            }
+            return; // Do not spawn normal enemies during boss wave
+        }
+
         const interval = Math.max(260, ENEMY_SPAWN_INTERVAL - game.wave * 55) * spawnMultiplier;
 
         if (currentTime - game.lastEnemySpawnAt < interval) {
@@ -333,7 +429,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         game.lastEnemySpawnAt = currentTime;
 
         const enemyType = getRandomEnemyType(game.wave);
-        const enemy = createEnemy(enemyType, game.wave);
+        const enemy = createEnemy(enemyType, game.wave, currentTime);
 
         game.enemies.push(enemy);
     }
@@ -352,7 +448,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         return 'common';
     }
 
-    function createEnemy(type, wave) {
+    function createEnemy(type, wave, currentTime) {
         const x = Math.random() * (CANVAS_WIDTH - ENEMY_WIDTH);
         const speedBonus = wave * 0.25;
 
@@ -392,11 +488,27 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
             y: -60,
             directionX: Math.random() > 0.5 ? 1 : -1,
             drift: Math.random() * 0.7,
+            lastShotAt: currentTime + Math.random() * 1500,
+            shootInterval: 2500 + Math.random() * 3000 - (wave * 100),
             ...enemyTypes[type]
         };
     }
 
     function updateEnemies(game, deltaTime) {
+        if (game.bossActive && game.boss) {
+            const boss = game.boss;
+            // Descend into view
+            if (boss.y < 60) {
+                boss.y += 1.5 * deltaTime;
+            } else {
+                // Sway left and right
+                boss.x += boss.directionX * boss.speed * deltaTime;
+                if (boss.x <= 20 || boss.x + boss.width >= CANVAS_WIDTH - 20) {
+                    boss.directionX *= -1;
+                }
+            }
+        }
+
         game.enemies = game.enemies.map((enemy) => {
             const nextX = enemy.x + enemy.directionX * enemy.drift * deltaTime;
 
@@ -444,8 +556,34 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
                     if (enemy.life <= 0) {
                         enemiesToRemove.add(enemyIndex);
-                        game.score += enemy.points;
+
+                        // Combo multiplier calculation
+                        const now = performance.now();
+                        let multiplier = 1;
+                        if (now - game.lastEnemyKilledAt < 1500) {
+                            game.comboCount += 1;
+                            multiplier = game.comboCount;
+                        } else {
+                            game.comboCount = 1;
+                        }
+                        game.lastEnemyKilledAt = now;
+
+                        const pointsEarned = enemy.points * multiplier;
+                        game.score += pointsEarned;
+
+                        // Spawn floating text
+                        game.floatingTexts.push({
+                            text: multiplier > 1 ? `+${enemy.points} x${multiplier}!` : `+${enemy.points}`,
+                            x: enemy.x + enemy.width / 2,
+                            y: enemy.y,
+                            color: multiplier > 1 ? '#facc15' : '#22d3ee',
+                            fontSize: multiplier > 1 ? 19 : 14,
+                            life: 45,
+                            maxLife: 45
+                        });
+
                         createExplosion(game, enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, enemy.color, 14);
+                        playExplosionSound();
                     }
                 }
             });
@@ -453,11 +591,88 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
         game.bullets = game.bullets.filter((_, index) => !bulletsToRemove.has(index));
         game.enemies = game.enemies.filter((_, index) => !enemiesToRemove.has(index));
+
+        // Check boss collisions
+        if (game.bossActive && game.boss) {
+            const boss = game.boss;
+            const bulletsToClear = new Set();
+
+            game.bullets.forEach((bullet, bulletIndex) => {
+                if (isColliding(bullet, boss)) {
+                    bulletsToClear.add(bulletIndex);
+                    boss.life -= 1;
+                    createExplosion(game, bullet.x, bullet.y, boss.color, 5);
+
+                    if (boss.life <= 0) {
+                        const pointsEarned = 500 * (game.wave / 5);
+                        game.score += pointsEarned;
+
+                        game.floatingTexts.push({
+                            text: `+${pointsEarned} ¡JEFE ELIMINADO!`,
+                            x: boss.x + boss.width / 2,
+                            y: boss.y + boss.height / 2,
+                            color: '#ec4899',
+                            fontSize: 22,
+                            life: 75,
+                            maxLife: 75
+                        });
+
+                        createExplosion(game, boss.x + boss.width / 2, boss.y + boss.height / 2, boss.color, 45);
+                        playExplosionSound();
+
+                        // Drop a power-up guaranteed
+                        const types = ['heart', 'triple', 'shield', 'speed'];
+                        const type = types[Math.floor(Math.random() * types.length)];
+                        game.powerUps.push({
+                            type,
+                            x: boss.x + boss.width / 2 - POWERUP_WIDTH / 2,
+                            y: boss.y + boss.height / 2,
+                            width: POWERUP_WIDTH,
+                            height: POWERUP_HEIGHT,
+                            speed: 2
+                        });
+
+                        game.boss = null;
+                        game.bossActive = false;
+                        
+                        // Force score to advance wave immediately
+                        game.score += WAVE_SCORE_STEP;
+                    }
+                }
+            });
+
+            game.bullets = game.bullets.filter((_, index) => !bulletsToClear.has(index));
+        }
     }
 
     function checkEnemyPlayerCollisions(game, currentTime) {
+        if (game.bossActive && game.boss) {
+            const boss = game.boss;
+            if (isColliding(boss, game.player)) {
+                if (currentTime < game.activePowerUps.shieldUntil) {
+                    boss.life -= 1;
+                    createExplosion(game, game.player.x + game.player.width / 2, game.player.y, boss.color, 10);
+                } else if (currentTime >= game.playerInvulnerableUntil) {
+                    game.lives -= 1;
+                    game.playerInvulnerableUntil = currentTime + PLAYER_INVULNERABLE_TIME;
+                    game.screenShakeTime = 18;
+                    game.damageFlashTime = 12;
+                    playHitSound();
+                    createExplosion(game, game.player.x + game.player.width / 2, game.player.y, '#facc15', 20);
+                }
+            }
+        }
 
         if (currentTime < game.activePowerUps.shieldUntil) {
+            // Shield destroys the enemy on contact without taking damage
+            const enemyIndex = game.enemies.findIndex((enemy) => isColliding(enemy, game.player));
+            if (enemyIndex !== -1) {
+                const enemy = game.enemies[enemyIndex];
+                game.enemies.splice(enemyIndex, 1);
+                game.score += enemy.points;
+                playExplosionSound();
+                createExplosion(game, enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, enemy.color, 14);
+            }
             return;
         }
 
@@ -475,8 +690,179 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         game.enemies.splice(enemyIndex, 1);
         game.lives -= 1;
         game.playerInvulnerableUntil = currentTime + PLAYER_INVULNERABLE_TIME;
+        game.screenShakeTime = 15;
+        game.damageFlashTime = 10;
+        playHitSound();
 
         createExplosion(game, enemy.x, enemy.y, '#facc15', 18);
+    }
+
+    function updateEnemyShooting(game, currentTime) {
+        if (game.bossActive && game.boss) {
+            const boss = game.boss;
+            const isPhase2 = boss.life <= boss.maxLife / 2;
+            
+            if (isPhase2) {
+                boss.color = '#f43f5e'; // change to danger rose-red color in phase 2
+            }
+
+            const currentInterval = isPhase2 ? boss.shootInterval * 0.65 : boss.shootInterval;
+
+            if (boss.y > 0 && currentTime - boss.lastShotAt >= currentInterval) {
+                boss.lastShotAt = currentTime;
+                playShootSound();
+
+                if (isPhase2) {
+                    // Phase 2: Rapid alternating bursts from lateral cannons
+                    game.enemyBullets.push(
+                        {
+                            x: boss.x + 10,
+                            y: boss.y + boss.height,
+                            width: ENEMY_BULLET_WIDTH,
+                            height: ENEMY_BULLET_HEIGHT,
+                            speed: ENEMY_BULLET_SPEED + 0.8,
+                            vx: -2.0
+                        },
+                        {
+                            x: boss.x + boss.width - 10,
+                            y: boss.y + boss.height,
+                            width: ENEMY_BULLET_WIDTH,
+                            height: ENEMY_BULLET_HEIGHT,
+                            speed: ENEMY_BULLET_SPEED + 0.8,
+                            vx: 2.0
+                        },
+                        {
+                            x: boss.x + boss.width / 2 - ENEMY_BULLET_WIDTH / 2,
+                            y: boss.y + boss.height,
+                            width: ENEMY_BULLET_WIDTH,
+                            height: ENEMY_BULLET_HEIGHT,
+                            speed: ENEMY_BULLET_SPEED + 0.8,
+                            vx: 0
+                        }
+                    );
+                } else {
+                    // Phase 1: 3-bullet fan pattern
+                    game.enemyBullets.push(
+                        {
+                            x: boss.x + boss.width / 2 - ENEMY_BULLET_WIDTH / 2,
+                            y: boss.y + boss.height,
+                            width: ENEMY_BULLET_WIDTH,
+                            height: ENEMY_BULLET_HEIGHT,
+                            speed: ENEMY_BULLET_SPEED,
+                            vx: 0
+                        },
+                        {
+                            x: boss.x + boss.width / 2 - ENEMY_BULLET_WIDTH / 2,
+                            y: boss.y + boss.height,
+                            width: ENEMY_BULLET_WIDTH,
+                            height: ENEMY_BULLET_HEIGHT,
+                            speed: ENEMY_BULLET_SPEED - 0.5,
+                            vx: -1.8
+                        },
+                        {
+                            x: boss.x + boss.width / 2 - ENEMY_BULLET_WIDTH / 2,
+                            y: boss.y + boss.height,
+                            width: ENEMY_BULLET_WIDTH,
+                            height: ENEMY_BULLET_HEIGHT,
+                            speed: ENEMY_BULLET_SPEED - 0.5,
+                            vx: 1.8
+                        }
+                    );
+                }
+            }
+        }
+
+        game.enemies.forEach((enemy) => {
+            if (enemy.y > 0 && currentTime - enemy.lastShotAt >= enemy.shootInterval) {
+                enemy.lastShotAt = currentTime;
+                
+                game.enemyBullets.push({
+                    x: enemy.x + enemy.width / 2 - ENEMY_BULLET_WIDTH / 2,
+                    y: enemy.y + enemy.height,
+                    width: ENEMY_BULLET_WIDTH,
+                    height: ENEMY_BULLET_HEIGHT,
+                    speed: ENEMY_BULLET_SPEED,
+                    vx: 0
+                });
+            }
+        });
+    }
+
+    function updateEnemyBullets(game, deltaTime) {
+        game.enemyBullets = game.enemyBullets
+            .map((bullet) => ({
+                ...bullet,
+                x: bullet.x + (bullet.vx || 0) * deltaTime,
+                y: bullet.y + bullet.speed * deltaTime
+            }))
+            .filter((bullet) => bullet.y < CANVAS_HEIGHT && bullet.x + bullet.width > 0 && bullet.x < CANVAS_WIDTH);
+    }
+
+    function updateBackgroundCode(game, deltaTime) {
+        game.backgroundCode.forEach((item) => {
+            item.y += item.speed * deltaTime;
+            if (item.y > CANVAS_HEIGHT + 20) {
+                item.y = -20;
+                item.x = Math.random() * CANVAS_WIDTH;
+                item.text = CODE_SNIPPETS[Math.floor(Math.random() * CODE_SNIPPETS.length)];
+                item.speed = Math.random() * 0.6 + 0.3;
+                item.opacity = Math.random() * 0.09 + 0.03;
+                item.fontSize = Math.floor(Math.random() * 6) + 11;
+            }
+        });
+    }
+
+    function updateFloatingTexts(game, deltaTime) {
+        game.floatingTexts.forEach((ft) => {
+            ft.y -= 0.65 * deltaTime;
+            ft.life -= 1 * deltaTime;
+        });
+        game.floatingTexts = game.floatingTexts.filter((ft) => ft.life > 0);
+    }
+
+    function drawFloatingTexts(ctx, floatingTexts) {
+        ctx.save();
+        floatingTexts.forEach((ft) => {
+            const opacity = Math.max(0, ft.life / ft.maxLife);
+            ctx.fillStyle = ft.color;
+            ctx.font = `bold ${ft.fontSize}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.globalAlpha = opacity;
+            
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = '#000000';
+            ctx.fillText(ft.text, ft.x, ft.y);
+        });
+        ctx.restore();
+    }
+
+    function checkEnemyBulletPlayerCollisions(game, currentTime) {
+        if (currentTime < game.activePowerUps.shieldUntil) {
+            game.enemyBullets = game.enemyBullets.filter(bullet => {
+                const collides = isColliding(bullet, game.player);
+                if (collides) {
+                    createExplosion(game, bullet.x, bullet.y, '#facc15', 3);
+                }
+                return !collides;
+            });
+            return;
+        }
+
+        if (currentTime < game.playerInvulnerableUntil) {
+            return;
+        }
+
+        const hitIndex = game.enemyBullets.findIndex((bullet) => isColliding(bullet, game.player));
+
+        if (hitIndex !== -1) {
+            game.enemyBullets.splice(hitIndex, 1);
+            game.lives -= 1;
+            game.playerInvulnerableUntil = currentTime + PLAYER_INVULNERABLE_TIME;
+            game.screenShakeTime = 12;
+            game.damageFlashTime = 10;
+            playHitSound();
+            createExplosion(game, game.player.x + game.player.width / 2, game.player.y, '#facc15', 18);
+        }
     }
 
     function drawPowerUps(ctx, powerUps) {
@@ -546,15 +932,135 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
     function drawGame(ctx, game) {
         drawBackground(ctx, game);
+
+        ctx.save();
+
+        if (game.screenShakeTime > 0) {
+            const shakeX = (Math.random() - 0.5) * 8;
+            const shakeY = (Math.random() - 0.5) * 8;
+            ctx.translate(shakeX, shakeY);
+        }
+
         drawPowerUps(ctx, game.powerUps);
         drawBullets(ctx, game.bullets);
+        drawEnemyBullets(ctx, game.enemyBullets);
         drawEnemies(ctx, game.enemies);
+        if (game.bossActive && game.boss) {
+            drawBoss(ctx, game.boss);
+        }
         drawPlayer(ctx, game.player, game.playerInvulnerableUntil, game.activePowerUps.shieldUntil);
         drawParticles(ctx, game.particles);
+        drawFloatingTexts(ctx, game.floatingTexts);
+
+        ctx.restore();
+
+        // Render damage flash overlay
+        if (game.damageFlashTime > 0) {
+            ctx.save();
+            const opacity = Math.min(0.35, game.damageFlashTime / 10) * 0.75;
+            ctx.fillStyle = `rgba(239, 68, 68, ${opacity})`;
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            ctx.restore();
+        }
+
+        // Draw new wave banner
+        if (game.waveBannerTime > 0 && !game.gameOver) {
+            drawWaveBanner(ctx, game);
+        }
 
         if (game.paused) {
             drawPauseOverlay(ctx);
         }
+    }
+
+    function drawWaveBanner(ctx, game) {
+        ctx.save();
+        const timeRemaining = game.waveBannerTime;
+        let opacity = 1;
+        
+        // Fade in first 15 frames, fade out last 25 frames
+        if (timeRemaining > 105) {
+            opacity = (120 - timeRemaining) / 15;
+        } else if (timeRemaining < 25) {
+            opacity = timeRemaining / 25;
+        }
+        
+        ctx.globalAlpha = opacity;
+        
+        // Draw dark background banner ribbon
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+        ctx.fillRect(0, CANVAS_HEIGHT / 2 - 45, CANVAS_WIDTH, 90);
+        
+        // Text shadow glow
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = game.wave % 5 === 0 ? '#ec4899' : '#22d3ee'; // pink for boss wave, cyan for normal wave
+        
+        // Wave Text
+        ctx.fillStyle = '#facc15';
+        ctx.font = 'bold 36px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(game.waveBannerText, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+        
+        ctx.restore();
+    }
+
+    function drawBoss(ctx, boss) {
+        ctx.save();
+        ctx.shadowBlur = 22;
+        ctx.shadowColor = boss.color;
+        ctx.fillStyle = boss.color;
+        
+        // Draw main body
+        ctx.fillRect(boss.x, boss.y, boss.width, boss.height);
+        
+        // Draw boss text label
+        ctx.fillStyle = '#020617';
+        ctx.font = 'bold 15px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(boss.label, boss.x + boss.width / 2, boss.y + boss.height / 2 + 5);
+        ctx.restore();
+
+        // Draw Boss Health Bar at top center
+        ctx.save();
+        const barWidth = 400;
+        const barHeight = 12;
+        const barX = CANVAS_WIDTH / 2 - barWidth / 2;
+        const barY = 20;
+
+        // Health bar background
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+        ctx.fillRect(barX, barY, barWidth, barHeight);
+
+        // Health bar fill
+        const fillRatio = Math.max(0, boss.life / boss.maxLife);
+        ctx.fillStyle = boss.color;
+        ctx.fillRect(barX, barY, barWidth * fillRatio, barHeight);
+
+        // Border
+        ctx.strokeStyle = '#f8fafc';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(barX, barY, barWidth, barHeight);
+
+        // Warning label text
+        ctx.fillStyle = '#fb7185';
+        ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`WARNING: ALERTA DE EXCEPCIÓN - ${boss.label}`, CANVAS_WIDTH / 2, barY - 7);
+        ctx.restore();
+    }
+
+    function drawEnemyBullets(ctx, enemyBullets) {
+        ctx.save();
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#ef4444';
+        ctx.fillStyle = '#ef4444';
+
+        enemyBullets.forEach((bullet) => {
+            ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+        });
+
+        ctx.restore();
     }
 
     function drawBackground(ctx, game) {
@@ -562,18 +1068,35 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
         const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
         gradient.addColorStop(0, '#020617');
-        gradient.addColorStop(1, '#111827');
+        gradient.addColorStop(1, '#0f172a');
 
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        ctx.fillStyle = 'rgba(148, 163, 184, 0.35)';
-
-        for (let i = 0; i < 70; i += 1) {
+        // Layer 1: Slow background stars
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.25)';
+        for (let i = 0; i < 50; i += 1) {
             const x = (i * 137) % CANVAS_WIDTH;
-            const y = (i * 89 + game.score * 0.08) % CANVAS_HEIGHT;
+            const y = (i * 89 + game.score * 0.04) % CANVAS_HEIGHT;
+            ctx.fillRect(x, y, 1, 1);
+        }
+
+        // Layer 2: Fast foreground stars
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.5)';
+        for (let i = 0; i < 30; i += 1) {
+            const x = (i * 223) % CANVAS_WIDTH;
+            const y = (i * 71 + game.score * 0.12) % CANVAS_HEIGHT;
             ctx.fillRect(x, y, 2, 2);
         }
+
+        // Layer 3: Dynamic code snippets floating (parallax)
+        ctx.save();
+        game.backgroundCode.forEach((item) => {
+            ctx.fillStyle = `rgba(34, 211, 238, ${item.opacity})`;
+            ctx.font = `bold ${item.fontSize}px monospace`;
+            ctx.fillText(item.text, item.x, item.y);
+        });
+        ctx.restore();
     }
 
     function drawPlayer(ctx, player, invulnerableUntil, shieldUntil) {
