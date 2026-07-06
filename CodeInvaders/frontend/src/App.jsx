@@ -26,6 +26,7 @@ function App() {
   const [saveMessage, setSaveMessage] = useState('');
   const [saveError, setSaveError] = useState('');
   const [startedAt, setStartedAt] = useState(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState('normal');
 
   useEffect(() => {
     async function loadConfig() {
@@ -40,8 +41,9 @@ function App() {
     loadConfig();
   }, []);
 
-  function startGame(name) {
+  function startGame(name, difficulty) {
     setPlayerName(name);
+    setSelectedDifficulty(difficulty);
     setStats(initialStats);
     setResult({ score: 0, wave: 1, duration: 0 });
     setAlreadySaved(false);
@@ -145,6 +147,7 @@ function App() {
 
           <GameCanvas
             key={gameKey}
+            difficultyConfig={config?.difficulties?.[selectedDifficulty]}
             onStatsChange={handleStatsChange}
             onPauseChange={handlePauseChange}
             onGameOver={handleGameOver}

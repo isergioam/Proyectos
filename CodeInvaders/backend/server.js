@@ -34,7 +34,7 @@ app.get('/api/scores', (req, res) => {
 app.post('/api/scores', (req, res) => {
     const { playerName, score, wave, duration } = req.body;
 
-    const validationError = validateScorePayload({ playerName, score, wave });
+    const validationError = validateScorePayload({ playerName, score, wave, duration });
 
     if (validationError) {
         return res.status(400).json({
@@ -65,6 +65,30 @@ app.post('/api/scores', (req, res) => {
         message: 'Puntuación guardada correctamente',
         score: newScore,
         ranking: sortedScores
+    });
+});
+
+app.get('/api/stats', (req, res) => {
+    const scores = readScores();
+
+    if (scores.length === 0) {
+        return res.json({
+            totalGames: 0,
+            bestScore: 0,
+            averageScore: 0,
+            bestWave: 0
+        });
+    }
+
+    const totalScore = scores.reduce((sum, item) => sum + item.score, 0);
+    const bestScore = Math.max(...scores.map((item) => item.score));
+    const bestWave = Math.max(...scores.map((item) => item.wave));
+
+    res.json({
+        totalGames: scores.length,
+        bestScore,
+        averageScore: Math.round(totalScore / scores.length),
+        bestWave
     });
 });
 
@@ -121,7 +145,7 @@ function sortScores(scores) {
     });
 }
 
-function validateScorePayload({ playerName, score, wave }) {
+function validateScorePayload({ playerName, score, wave, duration }) {
     if (typeof playerName !== 'string' || playerName.trim().length < 2) {
         return 'El nombre del equipo debe tener al menos 2 caracteres';
     }

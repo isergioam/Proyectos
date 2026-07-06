@@ -2,15 +2,22 @@ const gameConfig = {
     title: 'Code Invaders',
     subtitle: 'La invasión de los bugs',
     maxRankingItems: 10,
-    difficulty: {
-        name: 'Normal',
-        description: 'Oleadas progresivas, enemigos cada vez más frecuentes y ranking competitivo.'
-    },
-    rules: {
-        commonBugPoints: 10,
-        fastBugPoints: 20,
-        tankBugPoints: 40,
-        initialLives: 3
+    difficulties: {
+        easy: {
+            label: 'Fácil',
+            enemySpeedMultiplier: 0.8,
+            spawnMultiplier: 1.2
+        },
+        normal: {
+            label: 'Normal',
+            enemySpeedMultiplier: 1,
+            spawnMultiplier: 1
+        },
+        hard: {
+            label: 'Difícil',
+            enemySpeedMultiplier: 1.3,
+            spawnMultiplier: 0.75
+        }
     }
 };
 

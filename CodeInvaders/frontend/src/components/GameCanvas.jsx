@@ -19,12 +19,15 @@ import {
 } from '../game/constants';
 import { isColliding } from '../game/collisions';
 
-function GameCanvas({ onStatsChange, onGameOver, onPauseChange }) {
+function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange }) {
     const canvasRef = useRef(null);
     const animationRef = useRef(null);
     const keysRef = useRef({});
     const gameRef = useRef(null);
     const lastStatsRef = useRef({ score: -1, lives: -1, wave: -1, paused: false });
+    const enemySpeedMultiplier = difficultyConfig?.enemySpeedMultiplier || 1;
+    const spawnMultiplier = difficultyConfig?.spawnMultiplier || 1;
+
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -208,7 +211,7 @@ function GameCanvas({ onStatsChange, onGameOver, onPauseChange }) {
     }
 
     function spawnEnemies(game, currentTime) {
-        const interval = Math.max(260, ENEMY_SPAWN_INTERVAL - game.wave * 55);
+        const interval = Math.max(260, ENEMY_SPAWN_INTERVAL - game.wave * 55) * spawnMultiplier;
 
         if (currentTime - game.lastEnemySpawnAt < interval) {
             return;
@@ -244,7 +247,7 @@ function GameCanvas({ onStatsChange, onGameOver, onPauseChange }) {
             common: {
                 label: 'BUG',
                 color: '#ef4444',
-                speed: ENEMY_BASE_SPEED + speedBonus,
+                speed: (ENEMY_BASE_SPEED + speedBonus) * enemySpeedMultiplier,
                 points: 10,
                 life: 1,
                 width: ENEMY_WIDTH,
@@ -253,7 +256,7 @@ function GameCanvas({ onStatsChange, onGameOver, onPauseChange }) {
             fast: {
                 label: 'NaN',
                 color: '#f97316',
-                speed: ENEMY_BASE_SPEED + 1.4 + speedBonus,
+                speed: (ENEMY_BASE_SPEED + speedBonus) * enemySpeedMultiplier,
                 points: 20,
                 life: 1,
                 width: ENEMY_WIDTH - 6,
@@ -262,7 +265,7 @@ function GameCanvas({ onStatsChange, onGameOver, onPauseChange }) {
             tank: {
                 label: 'CORS',
                 color: '#a855f7',
-                speed: ENEMY_BASE_SPEED - 0.5 + speedBonus,
+                speed: (ENEMY_BASE_SPEED + speedBonus) * enemySpeedMultiplier,
                 points: 40,
                 life: 3,
                 width: ENEMY_WIDTH + 14,

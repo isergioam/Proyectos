@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 function StartScreen({ onStart, onShowRanking, config }) {
     const [playerName, setPlayerName] = useState('');
+    const [difficulty, setDifficulty] = useState('normal');
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -12,7 +13,7 @@ function StartScreen({ onStart, onShowRanking, config }) {
             return;
         }
 
-        onStart(cleanName);
+        onStart(cleanName, difficulty);
     }
 
     return (
@@ -45,6 +46,19 @@ function StartScreen({ onStart, onShowRanking, config }) {
                     />
 
                     <button type="submit">Empezar partida</button>
+
+                    <label htmlFor="difficulty">Dificultad</label>
+                    <select
+                        id="difficulty"
+                        value={difficulty}
+                        onChange={(event) => setDifficulty(event.target.value)}
+                    >
+                        {Object.entries(config?.difficulties || {}).map(([key, value]) => (
+                            <option key={key} value={key}>
+                                {value.label}
+                            </option>
+                        ))}
+                    </select>
                 </form>
 
                 <button className="link-button" onClick={onShowRanking}>
