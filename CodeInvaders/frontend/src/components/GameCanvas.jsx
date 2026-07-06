@@ -166,12 +166,14 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
             damageFlashTime: 0,
             waveBannerText: 'OLEADA 1',
             waveBannerTime: 120,
+            planets: [],
             backgroundCode: Array.from({ length: 18 }, () => ({
                 text: CODE_SNIPPETS[Math.floor(Math.random() * CODE_SNIPPETS.length)],
                 x: Math.random() * CANVAS_WIDTH,
                 y: Math.random() * CANVAS_HEIGHT,
                 speed: Math.random() * 0.6 + 0.3,
-                opacity: Math.random() * 0.09 + 0.03,
+                opacity: Math.random() * 0.12 + 0.14,
+                color: Math.random() < 0.65 ? '#22d3ee' : '#4ade80',
                 fontSize: Math.floor(Math.random() * 6) + 11
             })),
             activePowerUps: {
@@ -202,6 +204,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         checkPlayerPowerUpCollisions(game, currentTime);
         updateBackgroundCode(game, deltaTime);
         updateFloatingTexts(game, deltaTime);
+        updatePlanets(game, deltaTime);
 
         if (game.waveBannerTime > 0) {
             game.waveBannerTime -= deltaTime;
@@ -261,7 +264,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
     function applyPowerUp(game, powerUp, currentTime) {
         playPowerupSound();
         if (powerUp.type === 'heart') {
-            game.lives = Math.min(game.lives + 1, 5);
+            game.lives += 1;
         }
 
         if (powerUp.type === 'speed') {
@@ -806,7 +809,8 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
                 item.x = Math.random() * CANVAS_WIDTH;
                 item.text = CODE_SNIPPETS[Math.floor(Math.random() * CODE_SNIPPETS.length)];
                 item.speed = Math.random() * 0.6 + 0.3;
-                item.opacity = Math.random() * 0.09 + 0.03;
+                item.opacity = Math.random() * 0.12 + 0.14;
+                item.color = Math.random() < 0.65 ? '#22d3ee' : '#4ade80';
                 item.fontSize = Math.floor(Math.random() * 6) + 11;
             }
         });
@@ -834,6 +838,76 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
             ctx.fillText(ft.text, ft.x, ft.y);
         });
         ctx.restore();
+    }
+
+    function updatePlanets(game, deltaTime) {
+        // Spawn planet
+        if (game.planets.length < 2 && Math.random() < 0.0012) {
+            // Larger size: radius between 65 and 130 pixels (diameter up to 260px)
+            const radius = Math.random() * 65 + 65;
+            const colors = ['#ec4899', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            game.planets.push({
+                x: Math.random() * CANVAS_WIDTH,
+                y: -radius - 50,
+                radius,
+                // Slower scroll speed to make them feel massive and far away
+                speed: Math.random() * 0.08 + 0.07,
+                color,
+                ring: Math.random() < 0.45,
+                // Soft opacity so large planets blend beautifully behind the action
+                opacity: Math.random() * 0.10 + 0.10
+            });
+        }
+
+        // Update position
+        game.planets.forEach((planet) => {
+            planet.y += planet.speed * deltaTime;
+        });
+
+        // Filter out off-screen
+        game.planets = game.planets.filter((planet) => planet.y < CANVAS_HEIGHT + planet.radius + 60);
+    }
+
+    function drawPlanets(ctx, planets) {
+        planets.forEach((planet) => {
+            ctx.save();
+            ctx.globalAlpha = planet.opacity;
+            
+            // Draw ring behind planet first if it has one
+            if (planet.ring) {
+                ctx.strokeStyle = planet.color;
+                ctx.lineWidth = 4;
+                ctx.save();
+                ctx.translate(planet.x, planet.y);
+                ctx.rotate(-Math.PI / 6);
+                ctx.scale(2.2, 0.4);
+                ctx.beginPath();
+                ctx.arc(0, 0, planet.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Draw planet sphere with radial gradient
+            const grad = ctx.createRadialGradient(
+                planet.x - planet.radius * 0.3,
+                planet.y - planet.radius * 0.3,
+                planet.radius * 0.1,
+                planet.x,
+                planet.y,
+                planet.radius
+            );
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(0.2, planet.color);
+            grad.addColorStop(1, '#020617');
+            
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(planet.x, planet.y, planet.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        });
     }
 
     function checkEnemyBulletPlayerCollisions(game, currentTime) {
@@ -1081,6 +1155,9 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
             ctx.fillRect(x, y, 1, 1);
         }
 
+        // Draw planets (deep parallax layer)
+        drawPlanets(ctx, game.planets);
+
         // Layer 2: Fast foreground stars
         ctx.fillStyle = 'rgba(148, 163, 184, 0.5)';
         for (let i = 0; i < 30; i += 1) {
@@ -1092,7 +1169,11 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         // Layer 3: Dynamic code snippets floating (parallax)
         ctx.save();
         game.backgroundCode.forEach((item) => {
-            ctx.fillStyle = `rgba(34, 211, 238, ${item.opacity})`;
+            const hex = item.color || '#22d3ee';
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${item.opacity})`;
             ctx.font = `bold ${item.fontSize}px monospace`;
             ctx.fillText(item.text, item.x, item.y);
         });

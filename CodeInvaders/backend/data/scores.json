@@ -8,6 +8,14 @@
     "createdAt": "2026-07-06T11:40:18.794Z"
   },
   {
+    "id": "1783339439120-ad5e0cae30899",
+    "playerName": "BBBBB",
+    "score": 2190,
+    "wave": 8,
+    "duration": 183,
+    "createdAt": "2026-07-06T12:03:59.120Z"
+  },
+  {
     "id": "1783337321722-afaf25c9dd181",
     "playerName": "AAAA",
     "score": 2100,
@@ -16,12 +24,28 @@
     "createdAt": "2026-07-06T11:28:41.722Z"
   },
   {
+    "id": "1783338907865-0d9816f330abd",
+    "playerName": "Equipo B",
+    "score": 2030,
+    "wave": 7,
+    "duration": 129,
+    "createdAt": "2026-07-06T11:55:07.865Z"
+  },
+  {
     "id": "1783335285239-d662f13cc42bf",
     "playerName": "TEAM TEAM",
     "score": 1260,
     "wave": 5,
     "duration": 159,
     "createdAt": "2026-07-06T10:54:45.239Z"
+  },
+  {
+    "id": "1783338349881-f7de23b75e95e8",
+    "playerName": "Equipo A",
+    "score": 1210,
+    "wave": 5,
+    "duration": 89,
+    "createdAt": "2026-07-06T11:45:49.881Z"
   },
   {
     "id": "1783326789482-7711c53d50558",

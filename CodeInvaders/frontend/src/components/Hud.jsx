@@ -13,7 +13,9 @@ function Hud({ playerName, score, lives, wave, paused }) {
 
             <div>
                 <span className="hud-label">Vidas</span>
-                <strong>{'❤️'.repeat(lives)}</strong>
+                <strong>
+                    {lives <= 5 ? '❤️'.repeat(Math.max(0, lives)) : `❤️ x${lives}`}
+                </strong>
             </div>
 
             <div>
