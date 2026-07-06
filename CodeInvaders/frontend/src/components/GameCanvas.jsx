@@ -246,18 +246,15 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
             moveY *= 0.707;
         }
 
-        player.x += moveX * player.speed * deltaTime;
-        player.y += moveY * player.speed * deltaTime;
-
-        player.x = clamp(player.x, 0, CANVAS_WIDTH - player.width);
-        player.y = clamp(player.y, 0, CANVAS_HEIGHT - player.height);
-
         const currentSpeed = performance.now() < game.activePowerUps.speedUntil
             ? player.speed * 1.6
             : player.speed;
 
         player.x += moveX * currentSpeed * deltaTime;
         player.y += moveY * currentSpeed * deltaTime;
+
+        player.x = clamp(player.x, 0, CANVAS_WIDTH - player.width);
+        player.y = clamp(player.y, 0, CANVAS_HEIGHT - player.height);
     }
 
     function updateShooting(game, keys, currentTime) {
@@ -273,22 +270,57 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
         game.lastShotAt = currentTime;
 
-        game.bullets.push({
-            x: game.player.x + game.player.width / 2 - BULLET_WIDTH / 2,
-            y: game.player.y - BULLET_HEIGHT,
-            width: BULLET_WIDTH,
-            height: BULLET_HEIGHT,
-            speed: BULLET_SPEED
-        });
+        const hasTriple = currentTime < game.activePowerUps.tripleShotUntil;
+
+        if (hasTriple) {
+            // Center bullet
+            game.bullets.push({
+                x: game.player.x + game.player.width / 2 - BULLET_WIDTH / 2,
+                y: game.player.y - BULLET_HEIGHT,
+                width: BULLET_WIDTH,
+                height: BULLET_HEIGHT,
+                speed: BULLET_SPEED,
+                vx: 0
+            });
+            // Left diagonal bullet
+            game.bullets.push({
+                x: game.player.x + game.player.width / 2 - BULLET_WIDTH / 2 - 10,
+                y: game.player.y - BULLET_HEIGHT,
+                width: BULLET_WIDTH,
+                height: BULLET_HEIGHT,
+                speed: BULLET_SPEED,
+                vx: -2.5
+            });
+            // Right diagonal bullet
+            game.bullets.push({
+                x: game.player.x + game.player.width / 2 - BULLET_WIDTH / 2 + 10,
+                y: game.player.y - BULLET_HEIGHT,
+                width: BULLET_WIDTH,
+                height: BULLET_HEIGHT,
+                speed: BULLET_SPEED,
+                vx: 2.5
+            });
+        } else {
+            // Single bullet
+            game.bullets.push({
+                x: game.player.x + game.player.width / 2 - BULLET_WIDTH / 2,
+                y: game.player.y - BULLET_HEIGHT,
+                width: BULLET_WIDTH,
+                height: BULLET_HEIGHT,
+                speed: BULLET_SPEED,
+                vx: 0
+            });
+        }
     }
 
     function updateBullets(game, deltaTime) {
         game.bullets = game.bullets
             .map((bullet) => ({
                 ...bullet,
+                x: bullet.x + (bullet.vx || 0) * deltaTime,
                 y: bullet.y - bullet.speed * deltaTime
             }))
-            .filter((bullet) => bullet.y + bullet.height > 0);
+            .filter((bullet) => bullet.y + bullet.height > 0 && bullet.x + bullet.width > 0 && bullet.x < CANVAS_WIDTH);
     }
 
     function spawnEnemies(game, currentTime) {
@@ -513,11 +545,11 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
     }
 
     function drawGame(ctx, game) {
-        drawPowerUps(ctx, game.powerUps);
         drawBackground(ctx, game);
+        drawPowerUps(ctx, game.powerUps);
         drawBullets(ctx, game.bullets);
         drawEnemies(ctx, game.enemies);
-        drawPlayer(ctx, game.player, game.playerInvulnerableUntil);
+        drawPlayer(ctx, game.player, game.playerInvulnerableUntil, game.activePowerUps.shieldUntil);
         drawParticles(ctx, game.particles);
 
         if (game.paused) {
@@ -544,14 +576,16 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         }
     }
 
-    function drawPlayer(ctx, player, invulnerableUntil) {
+    function drawPlayer(ctx, player, invulnerableUntil, shieldUntil) {
         const isInvulnerable = performance.now() < invulnerableUntil;
+        const hasShield = performance.now() < shieldUntil;
 
         if (isInvulnerable && Math.floor(performance.now() / 80) % 2 === 0) {
             return;
         }
 
         const centerX = player.x + player.width / 2;
+        const centerY = player.y + player.height / 2;
 
         ctx.save();
         ctx.shadowBlur = 18;
@@ -568,6 +602,16 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
         ctx.fillStyle = '#f8fafc';
         ctx.fillRect(centerX - 5, player.y + 15, 10, 12);
+
+        if (hasShield) {
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 3;
+            ctx.shadowColor = '#facc15';
+            ctx.shadowBlur = 15;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, Math.max(player.width, player.height) * 0.75, 0, Math.PI * 2);
+            ctx.stroke();
+        }
 
         ctx.restore();
     }
