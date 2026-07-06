@@ -100,7 +100,8 @@ h2 {
   font-weight: 800;
 }
 
-.start-form input {
+.start-form input,
+.start-form select {
   width: 100%;
   padding: 14px 16px;
   border: 1px solid rgba(148, 163, 184, 0.35);
@@ -110,9 +111,15 @@ h2 {
   outline: none;
 }
 
-.start-form input:focus {
+.start-form input:focus,
+.start-form select:focus {
   border-color: #22d3ee;
   box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.16);
+}
+
+.start-form select option {
+  background: #020617;
+  color: #f8fafc;
 }
 
 .start-form button,

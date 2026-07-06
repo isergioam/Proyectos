@@ -28,9 +28,9 @@ function StartScreen({ onStart, onShowRanking, config }) {
                     a las oleadas del servidor maldito.
                 </p>
 
-                {config?.difficulty && (
+                {config?.difficulties?.[difficulty] && (
                     <p className="difficulty-box">
-                        <strong>Dificultad:</strong> {config.difficulty.name}. {config.difficulty.description}
+                        <strong>Dificultad seleccionada:</strong> {config.difficulties[difficulty].label} (Velocidad: {config.difficulties[difficulty].enemySpeedMultiplier}x, Aparición: {config.difficulties[difficulty].spawnMultiplier}x)
                     </p>
                 )}
 
@@ -45,8 +45,6 @@ function StartScreen({ onStart, onShowRanking, config }) {
                         onChange={(event) => setPlayerName(event.target.value)}
                     />
 
-                    <button type="submit">Empezar partida</button>
-
                     <label htmlFor="difficulty">Dificultad</label>
                     <select
                         id="difficulty"
@@ -59,6 +57,8 @@ function StartScreen({ onStart, onShowRanking, config }) {
                             </option>
                         ))}
                     </select>
+
+                    <button type="submit">Empezar partida</button>
                 </form>
 
                 <button className="link-button" onClick={onShowRanking}>
