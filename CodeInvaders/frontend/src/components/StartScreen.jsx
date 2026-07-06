@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function StartScreen({ onStart }) {
+function StartScreen({ onStart, onShowRanking, config }) {
     const [playerName, setPlayerName] = useState('');
 
     function handleSubmit(event) {
@@ -19,13 +19,19 @@ function StartScreen({ onStart }) {
         <section className="screen start-screen">
             <div className="panel intro-panel">
                 <p className="eyebrow">Arcade FullStack</p>
-                <h1>Code Invaders</h1>
-                <h2>La invasión de los bugs</h2>
+                <h1>{config?.title || 'Code Invaders'}</h1>
+                <h2>{config?.subtitle || 'La invasión de los bugs'}</h2>
 
                 <p className="intro-text">
                     Pilota la nave Debugger-1, destruye bugs, esquiva errores y sobrevive
                     a las oleadas del servidor maldito.
                 </p>
+
+                {config?.difficulty && (
+                    <p className="difficulty-box">
+                        <strong>Dificultad:</strong> {config.difficulty.name}. {config.difficulty.description}
+                    </p>
+                )}
 
                 <form className="start-form" onSubmit={handleSubmit}>
                     <label htmlFor="playerName">Nombre del equipo</label>
@@ -40,6 +46,10 @@ function StartScreen({ onStart }) {
 
                     <button type="submit">Empezar partida</button>
                 </form>
+
+                <button className="link-button" onClick={onShowRanking}>
+                    Ver ranking
+                </button>
 
                 <div className="controls-box">
                     <h3>Controles</h3>

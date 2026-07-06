@@ -1,4 +1,15 @@
-function GameOver({ playerName, result, onRestart, onBackToStart }) {
+function GameOver({
+    playerName,
+    result,
+    saving,
+    saveMessage,
+    saveError,
+    alreadySaved,
+    onSaveScore,
+    onRestart,
+    onBackToStart,
+    onShowRanking
+}) {
     return (
         <section className="screen gameover-screen">
             <div className="panel gameover-panel">
@@ -21,8 +32,22 @@ function GameOver({ playerName, result, onRestart, onBackToStart }) {
                     </div>
                 </div>
 
+                {saveMessage && <p className="status-text success-text">{saveMessage}</p>}
+                {saveError && <p className="status-text error-text">{saveError}</p>}
+
                 <div className="actions-row">
-                    <button onClick={onRestart}>Volver a jugar</button>
+                    <button onClick={onSaveScore} disabled={saving || alreadySaved}>
+                        {alreadySaved ? 'Puntuación guardada' : saving ? 'Guardando...' : 'Guardar puntuación'}
+                    </button>
+
+                    <button className="secondary-button" onClick={onRestart}>
+                        Volver a jugar
+                    </button>
+
+                    <button className="secondary-button" onClick={onShowRanking}>
+                        Ver ranking
+                    </button>
+
                     <button className="secondary-button" onClick={onBackToStart}>
                         Cambiar equipo
                     </button>
