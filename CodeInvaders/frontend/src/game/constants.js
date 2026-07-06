@@ -18,3 +18,8 @@ export const ENEMY_BASE_SPEED = 2;
 export const ENEMY_SPAWN_INTERVAL = 1600;
 
 export const WAVE_SCORE_STEP = 300;
+
+export const POWERUP_WIDTH = 30;
+export const POWERUP_HEIGHT = 30;
+export const POWERUP_SPAWN_INTERVAL = 7000;
+export const POWERUP_DURATION = 5000;

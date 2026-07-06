@@ -15,7 +15,11 @@ import {
     PLAYER_INVULNERABLE_TIME,
     PLAYER_SPEED,
     PLAYER_WIDTH,
-    WAVE_SCORE_STEP
+    WAVE_SCORE_STEP,
+    POWERUP_DURATION,
+    POWERUP_HEIGHT,
+    POWERUP_SPAWN_INTERVAL,
+    POWERUP_WIDTH
 } from '../game/constants';
 import { isColliding } from '../game/collisions';
 
@@ -131,7 +135,14 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
             },
             bullets: [],
             enemies: [],
-            particles: []
+            particles: [],
+            lastPowerUpSpawnAt: 0,
+            powerUps: [],
+            activePowerUps: {
+                speedUntil: 0,
+                shieldUntil: 0,
+                tripleShotUntil: 0
+            }
         };
     }
 
@@ -147,6 +158,69 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         checkEnemyPlayerCollisions(game, currentTime);
         checkEnemiesThatPassThePlayer(game);
         checkGameOver(game);
+        spawnPowerUps(game, currentTime);
+        updatePowerUps(game, deltaTime);
+        checkPlayerPowerUpCollisions(game, currentTime);
+    }
+
+    function spawnPowerUps(game, currentTime) {
+        if (currentTime - game.lastPowerUpSpawnAt < POWERUP_SPAWN_INTERVAL) {
+            return;
+        }
+
+        game.lastPowerUpSpawnAt = currentTime;
+
+        const types = ['heart', 'speed', 'triple', 'shield'];
+        const type = types[Math.floor(Math.random() * types.length)];
+
+        game.powerUps.push({
+            type,
+            x: Math.random() * (CANVAS_WIDTH - POWERUP_WIDTH),
+            y: -POWERUP_HEIGHT,
+            width: POWERUP_WIDTH,
+            height: POWERUP_HEIGHT,
+            speed: 2
+        });
+    }
+
+    function updatePowerUps(game, deltaTime) {
+        game.powerUps = game.powerUps
+            .map((powerUp) => ({
+                ...powerUp,
+                y: powerUp.y + powerUp.speed * deltaTime
+            }))
+            .filter((powerUp) => powerUp.y < CANVAS_HEIGHT + POWERUP_HEIGHT);
+    }
+
+    function checkPlayerPowerUpCollisions(game, currentTime) {
+        const collectedIndexes = new Set();
+
+        game.powerUps.forEach((powerUp, index) => {
+            if (isColliding(powerUp, game.player)) {
+                applyPowerUp(game, powerUp, currentTime);
+                collectedIndexes.add(index);
+            }
+        });
+
+        game.powerUps = game.powerUps.filter((_, index) => !collectedIndexes.has(index));
+    }
+
+    function applyPowerUp(game, powerUp, currentTime) {
+        if (powerUp.type === 'heart') {
+            game.lives = Math.min(game.lives + 1, 5);
+        }
+
+        if (powerUp.type === 'speed') {
+            game.activePowerUps.speedUntil = currentTime + POWERUP_DURATION;
+        }
+
+        if (powerUp.type === 'triple') {
+            game.activePowerUps.tripleShotUntil = currentTime + POWERUP_DURATION;
+        }
+
+        if (powerUp.type === 'shield') {
+            game.activePowerUps.shieldUntil = currentTime + POWERUP_DURATION;
+        }
     }
 
     function updateWave(game) {
@@ -177,6 +251,13 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
 
         player.x = clamp(player.x, 0, CANVAS_WIDTH - player.width);
         player.y = clamp(player.y, 0, CANVAS_HEIGHT - player.height);
+
+        const currentSpeed = performance.now() < game.activePowerUps.speedUntil
+            ? player.speed * 1.6
+            : player.speed;
+
+        player.x += moveX * currentSpeed * deltaTime;
+        player.y += moveY * currentSpeed * deltaTime;
     }
 
     function updateShooting(game, keys, currentTime) {
@@ -343,6 +424,11 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
     }
 
     function checkEnemyPlayerCollisions(game, currentTime) {
+
+        if (currentTime < game.activePowerUps.shieldUntil) {
+            return;
+        }
+
         if (currentTime < game.playerInvulnerableUntil) {
             return;
         }
@@ -359,6 +445,26 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         game.playerInvulnerableUntil = currentTime + PLAYER_INVULNERABLE_TIME;
 
         createExplosion(game, enemy.x, enemy.y, '#facc15', 18);
+    }
+
+    function drawPowerUps(ctx, powerUps) {
+        powerUps.forEach((powerUp) => {
+            const icons = {
+                heart: '♥',
+                speed: '⚡',
+                triple: '×3',
+                shield: '⬡'
+            };
+
+            ctx.save();
+            ctx.fillStyle = '#facc15';
+            ctx.fillRect(powerUp.x, powerUp.y, powerUp.width, powerUp.height);
+            ctx.fillStyle = '#111827';
+            ctx.font = 'bold 14px system-ui';
+            ctx.textAlign = 'center';
+            ctx.fillText(icons[powerUp.type], powerUp.x + powerUp.width / 2, powerUp.y + 20);
+            ctx.restore();
+        });
     }
 
     function checkEnemiesThatPassThePlayer(game) {
@@ -407,6 +513,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
     }
 
     function drawGame(ctx, game) {
+        drawPowerUps(ctx, game.powerUps);
         drawBackground(ctx, game);
         drawBullets(ctx, game.bullets);
         drawEnemies(ctx, game.enemies);
