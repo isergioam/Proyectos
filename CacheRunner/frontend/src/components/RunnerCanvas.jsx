@@ -13,7 +13,12 @@ import {
     OBSTACLE_SPAWN_INTERVAL,
     PLAYER_HEIGHT,
     PLAYER_WIDTH,
-    PLAYER_X
+    PLAYER_X,
+    HIT_FREEZE_TIME,
+    COLLECTIBLE_SPAWN_INTERVAL,
+    COLLECTIBLE_WIDTH,
+    COLLECTIBLE_HEIGHT,
+    COLLECTIBLE_POINTS
 } from '../game/constants';
 import { isColliding } from '../game/collisions';
 import { loadGameImages } from '../game/assets';
@@ -76,13 +81,17 @@ function RunnerCanvas({ onStatsChange, onGameOver, onPauseChange }) {
             drawGame(ctx, game, currentTime);
 
             if (game.gameOver && !gameOverSentRef.current) {
-                gameOverSentRef.current = true;
-                playSound('gameover');
-                onGameOver({
-                    score: game.score,
-                    distance: game.distance,
-                    speed: game.worldSpeed / INITIAL_WORLD_SPEED
-                });
+                const canSendGameOver = !game.hitAt || currentTime - game.hitAt >= HIT_FREEZE_TIME;
+
+                if (canSendGameOver) {
+                    gameOverSentRef.current = true;
+                    playSound('gameover');
+                    onGameOver({
+                        score: game.score,
+                        distance: game.distance,
+                        speed: game.worldSpeed / INITIAL_WORLD_SPEED
+                    });
+                }
             }
 
             animationFrameRef.current = requestAnimationFrame(gameLoop);
@@ -113,6 +122,11 @@ function RunnerCanvas({ onStatsChange, onGameOver, onPauseChange }) {
 
 function createInitialGameState() {
     return {
+        shieldActive: false,
+        lastCollectibleSpawnAt: 0,
+        collectibles: [],
+        collectiblesCollected: 0,
+        hitAt: null,
         score: 0,
         distance: 0,
         worldSpeed: INITIAL_WORLD_SPEED,
@@ -152,6 +166,72 @@ function updateGame(game, keys, deltaTime, currentTime) {
     spawnObstacles(game, currentTime);
     updateObstacles(game, deltaTime);
     checkObstacleCollisions(game);
+    spawnCollectibles(game, currentTime);
+    updateCollectibles(game, deltaTime);
+    checkCollectibleCollisions(game);
+}
+
+function spawnCollectibles(game, currentTime) {
+    if (currentTime - game.lastCollectibleSpawnAt < COLLECTIBLE_SPAWN_INTERVAL) {
+        return;
+    }
+
+    game.lastCollectibleSpawnAt = currentTime;
+
+    const types = [
+        { type: 'cache', imageKey: 'cache', points: COLLECTIBLE_POINTS },
+        { type: 'cookie', imageKey: 'cookie', points: COLLECTIBLE_POINTS },
+        { type: 'shield', imageKey: 'shield', points: 0 }
+    ];
+
+    const selectedType = types[Math.floor(Math.random() * types.length)];
+
+    game.collectibles.push({
+        ...selectedType,
+        x: CANVAS_WIDTH + 30,
+        y: randomBetween(210, GROUND_Y - 110),
+        width: COLLECTIBLE_WIDTH,
+        height: COLLECTIBLE_HEIGHT
+    });
+}
+
+function updateCollectibles(game, deltaTime) {
+    game.collectibles = game.collectibles
+        .map((collectible) => ({
+            ...collectible,
+            x: collectible.x - game.worldSpeed * deltaTime
+        }))
+        .filter((collectible) => collectible.x + collectible.width > -60);
+}
+
+function checkCollectibleCollisions(game) {
+    const collectedIndexes = new Set();
+
+    game.collectibles.forEach((collectible, index) => {
+        if (isColliding(game.player, collectible)) {
+            game.score += collectible.points;
+            game.collectiblesCollected += 1;
+            collectedIndexes.add(index);
+            playSound('collect');
+        }
+
+        if (collectible.type === 'shield') {
+            game.shieldActive = true;
+            playSound('shield');
+        } else {
+            game.score += collectible.points;
+            playSound('collect');
+        }
+    });
+
+    game.collectibles = game.collectibles.filter((_, index) => !collectedIndexes.has(index));
+}
+
+function drawCollectibles(ctx, collectibles) {
+    collectibles.forEach((collectible) => {
+        const sprite = images.collectibles[collectible.imageKey];
+        ctx.drawImage(sprite, collectible.x, collectible.y, collectible.width, collectible.height);
+    });
 }
 
 function updateSpeed(game) {
@@ -209,7 +289,7 @@ function updatePlayer(game, keys, deltaTime) {
         player.dashTimeRemaining = Math.max(0, player.dashTimeRemaining - deltaTime);
         // Thrust the player forward relative to the screen
         player.x = Math.min(PLAYER_X + 160, player.x + 13 * deltaTime);
-        
+
         // Emit continuous fart trail!
         if (Math.random() < 0.7) {
             game.particles.push(createFartParticle(player.x, player.y + player.height - 18));
@@ -228,7 +308,7 @@ function updatePlayer(game, keys, deltaTime) {
                 player.vy = 1.2;
             }
         }
-        
+
         // Slide back to default X position smoothly
         if (player.x > PLAYER_X) {
             player.x = Math.max(PLAYER_X, player.x - 3.5 * deltaTime);
@@ -289,15 +369,42 @@ function updateObstacles(game, deltaTime) {
 }
 
 function checkObstacleCollisions(game) {
-    if (game.player.isDashing) {
-        return; // invulnerable during dash!
-    }
-    const hasCollision = game.obstacles.some((obstacle) => isColliding(game.player, obstacle));
+    const obstacleIndex = game.obstacles.findIndex((obstacle) => {
+        return isColliding(game.player, obstacle);
+    });
 
-    if (hasCollision) {
-        playSound('hit');
-        game.gameOver = true;
+    if (obstacleIndex === -1) {
+        return;
     }
+
+    if (game.shieldActive) {
+        game.shieldActive = false;
+        game.obstacles.splice(obstacleIndex, 1);
+        playSound('shield');
+        return;
+    }
+
+    playSound('hit');
+    game.hitAt = performance.now();
+    game.gameOver = true;
+}
+
+function drawShield(ctx, player) {
+    ctx.save();
+    ctx.strokeStyle = '#22d3ee';
+    ctx.lineWidth = 4;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#22d3ee';
+    ctx.beginPath();
+    ctx.arc(
+        player.x + player.width / 2,
+        player.y + player.height / 2,
+        Math.max(player.width, player.height) * 0.72,
+        0,
+        Math.PI * 2
+    );
+    ctx.stroke();
+    ctx.restore();
 }
 
 function drawGame(ctx, game, currentTime) {
@@ -306,9 +413,12 @@ function drawGame(ctx, game, currentTime) {
     drawParallaxBackground(ctx, game.backgroundOffsets);
     drawGround(ctx, game.backgroundOffsets.ground);
     drawParticles(ctx, game.particles);
+    drawCollectibles(ctx, game.collectibles);
     drawObstacles(ctx, game.obstacles);
     drawPlayer(ctx, game.player, currentTime, game.gameOver);
-
+    if (game.shieldActive) {
+        drawShield(ctx, game.player);
+    }
     if (game.paused) {
         drawPauseOverlay(ctx);
     }
@@ -392,6 +502,10 @@ function drawParticles(ctx, particles) {
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
     });
+}
+
+function randomBetween(min, max) {
+    return Math.random() * (max - min) + min;
 }
 
 export default RunnerCanvas;

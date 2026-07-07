@@ -18,4 +18,11 @@ export const DISTANCE_SCORE_MULTIPLIER = 3;
 
 export const RUN_ANIMATION_FRAME_TIME = 90;
 
-export const MAX_FLAP_TIME = 30;
+export const MAX_FLAP_TIME = 3000;
+
+export const HIT_FREEZE_TIME = 500;
+
+export const COLLECTIBLE_WIDTH = 34;
+export const COLLECTIBLE_HEIGHT = 34;
+export const COLLECTIBLE_SPAWN_INTERVAL = 700;
+export const COLLECTIBLE_POINTS = 100;
