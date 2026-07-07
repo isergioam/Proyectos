@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 68" width="58" height="68">
+  <defs>
+    <linearGradient id="duckBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE042" />
+      <stop offset="100%" stop-color="#FFB000" />
+    </linearGradient>
+    <linearGradient id="duckBeak" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9E2C" />
+      <stop offset="100%" stop-color="#FF5E00" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Right Foot / Leg (back leg in this frame) -->
+  <path d="M16,52 L12,65 L6,66 L6,63 L12,61 L14,52 Z" fill="#FF7A00" />
+  
+  <!-- Duck Body -->
+  <path d="M10,44 C10,34 18,30 28,30 C38,30 42,36 42,44 C42,50 36,54 28,54 C16,54 10,50 10,44 Z" fill="url(#duckBody)" />
+  
+  <!-- Duck Head -->
+  <circle cx="34" cy="22" r="13" fill="url(#duckBody)" />
+  
+  <!-- Connection / Neck fill -->
+  <path d="M26,28 C26,28 29,38 34,36 C39,34 38,28 38,28 Z" fill="url(#duckBody)" />
+  
+  <!-- Cute Pink Cheek -->
+  <circle cx="31" cy="26" r="3" fill="#FF8787" opacity="0.8" />
+  
+  <!-- Beak -->
+  <path d="M45,21 C45,21 53,20 55,23 C56,24 53,27 45,26 C43,26 43,21 45,21 Z" fill="url(#duckBeak)" />
+  
+  <!-- Sunglasses -->
+  <rect x="28" y="14" width="20" height="6" rx="1" fill="#1E293B" />
+  <path d="M28,15 L22,18" stroke="#1E293B" stroke-width="2" />
+  <line x1="33" y1="15" x2="35" y2="19" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="41" y1="15" x2="43" y2="19" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" />
+  
+  <!-- Wing (pointed up) -->
+  <path d="M16,40 C14,34 18,28 22,30 C26,32 22,42 18,44 C17,44 16,42 16,40 Z" fill="#FFE042" stroke="#E5A900" stroke-width="1" />
+  
+  <!-- Left Foot / Leg (front leg in this frame) -->
+  <path d="M28,52 L32,64 L38,65 L38,62 L34,60 L31,52 Z" fill="#E65100" />
+</svg>

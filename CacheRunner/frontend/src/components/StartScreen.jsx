@@ -23,8 +23,8 @@ function StartScreen({ onStart }) {
                 <h2>Corre antes de que expire el token</h2>
 
                 <p className="intro-text">
-                    Runner.js atraviesa un pipeline digital lleno de errores, paquetes rotos
-                    y procesos zombis. Salta, sobrevive y consigue la mayor distancia.
+                    DuckDebugger.js (un tierno pero rudo patito de goma) atraviesa un pipeline digital lleno de errores, paquetes rotos
+                    y procesos zombis. Salta, sobrevive y ayuda a depurar el código.
                 </p>
 
                 <form className="start-form" onSubmit={handleSubmit}>

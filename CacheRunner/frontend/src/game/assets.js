@@ -9,13 +9,13 @@ const imagePaths = {
     },
     player: {
         run: [
-            '/assets/player/runner_run_1.png',
-            '/assets/player/runner_run_2.png',
-            '/assets/player/runner_run_3.png',
-            '/assets/player/runner_run_4.png'
+            '/assets/player/runner_run_1.svg',
+            '/assets/player/runner_run_2.svg',
+            '/assets/player/runner_run_3.svg',
+            '/assets/player/runner_run_4.svg'
         ],
-        jump: '/assets/player/runner_jump.png',
-        hit: '/assets/player/runner_hit.png'
+        jump: '/assets/player/runner_jump.svg',
+        hit: '/assets/player/runner_hit.svg'
     },
     obstacles: {
         error404: '/assets/obstacles/error_404.png',

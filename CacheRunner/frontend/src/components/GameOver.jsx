@@ -1,4 +1,15 @@
-function GameOver({ playerName, result, onRestart, onBackToStart }) {
+function GameOver({
+    playerName,
+    result,
+    saving,
+    alreadySaved,
+    saveMessage,
+    saveError,
+    onSaveScore,
+    onRestart,
+    onBackToStart,
+    onShowRanking
+}) {
     return (
         <section className="screen gameover-screen">
             <div className="panel gameover-panel">
@@ -6,7 +17,7 @@ function GameOver({ playerName, result, onRestart, onBackToStart }) {
                 <h1>Game Over</h1>
 
                 <p className="intro-text">
-                    {playerName}, Runner.js se ha comido un error en producción.
+                    ¡Oh no, {playerName}! DuckDebugger.js se ha estrellado contra un error en producción y ha dejado de responder.
                 </p>
 
                 <div className="result-grid">
@@ -26,8 +37,22 @@ function GameOver({ playerName, result, onRestart, onBackToStart }) {
                     </div>
                 </div>
 
+                {saveMessage && <p className="status-text success-text">{saveMessage}</p>}
+                {saveError && <p className="status-text error-text">{saveError}</p>}
+
                 <div className="actions-row">
-                    <button onClick={onRestart}>Volver a correr</button>
+                    <button onClick={onSaveScore} disabled={saving || alreadySaved}>
+                        {alreadySaved ? 'Puntuación guardada' : saving ? 'Guardando...' : 'Guardar puntuación'}
+                    </button>
+
+                    <button className="secondary-button" onClick={onRestart}>
+                        Volver a correr
+                    </button>
+
+                    <button className="secondary-button" onClick={onShowRanking}>
+                        Ver ranking
+                    </button>
+
                     <button className="secondary-button" onClick={onBackToStart}>
                         Cambiar equipo
                     </button>

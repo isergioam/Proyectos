@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { playSound } from '../game/sounds';
 import {
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
@@ -75,6 +76,7 @@ function RunnerCanvas({ onStatsChange, onGameOver, onPauseChange }) {
 
             if (game.gameOver && !gameOverSentRef.current) {
                 gameOverSentRef.current = true;
+                playSound('gameover');
                 onGameOver({
                     score: game.score,
                     distance: game.distance,
@@ -170,6 +172,7 @@ function updatePlayer(game, keys, deltaTime) {
     if (wantsToJump && player.onGround) {
         player.vy = JUMP_FORCE;
         player.onGround = false;
+        playSound('jump');
     }
 
     player.vy += GRAVITY * deltaTime;
@@ -224,6 +227,7 @@ function checkObstacleCollisions(game) {
     const hasCollision = game.obstacles.some((obstacle) => isColliding(game.player, obstacle));
 
     if (hasCollision) {
+        playSound('hit');
         game.gameOver = true;
     }
 }
