@@ -211,18 +211,15 @@ function checkCollectibleCollisions(game) {
 
     game.collectibles.forEach((collectible, index) => {
         if (isColliding(game.player, collectible)) {
-            game.score += collectible.points;
-            game.collectiblesCollected += 1;
             collectedIndexes.add(index);
-            playSound('collect');
-        }
-
-        if (collectible.type === 'shield') {
-            game.shieldActive = true;
-            playSound('shield');
-        } else {
-            game.score += collectible.points;
-            playSound('collect');
+            if (collectible.type === 'shield') {
+                game.shieldActive = true;
+                playSound('shield');
+            } else {
+                game.score += collectible.points;
+                game.collectiblesCollected += 1;
+                playSound('collect');
+            }
         }
     });
 
@@ -232,7 +229,9 @@ function checkCollectibleCollisions(game) {
 function drawCollectibles(ctx, collectibles) {
     collectibles.forEach((collectible) => {
         const sprite = images.collectibles[collectible.imageKey];
-        ctx.drawImage(sprite, collectible.x, collectible.y, collectible.width, collectible.height);
+        if (sprite) {
+            ctx.drawImage(sprite, collectible.x, collectible.y, collectible.width, collectible.height);
+        }
     });
 }
 
@@ -425,7 +424,7 @@ function drawGame(ctx, game, currentTime) {
     drawGround(ctx, game.backgroundOffsets.ground);
     drawParticles(ctx, game.particles);
     drawCollectibles(ctx, game.collectibles);
-    drawObstacles(ctx, game.obstacles);
+    drawObstacles(ctx, game.obstacles, currentTime);
     drawPlayer(ctx, game.player, currentTime, game.gameOver);
     if (game.shieldActive) {
         drawShield(ctx, game.player);
@@ -456,10 +455,16 @@ function drawPlayer(ctx, player, currentTime, gameOver) {
     ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
 }
 
-function drawObstacles(ctx, obstacles) {
+function drawObstacles(ctx, obstacles, currentTime) {
     obstacles.forEach((obstacle) => {
-        const sprite = images.obstacles[obstacle.imageKey];
-        ctx.drawImage(sprite, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+        const spriteData = images.obstacles[obstacle.imageKey];
+        const sprite = Array.isArray(spriteData)
+            ? spriteData[Math.floor(currentTime / 160) % spriteData.length]
+            : spriteData;
+
+        if (sprite) {
+            ctx.drawImage(sprite, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+        }
     });
 }
 

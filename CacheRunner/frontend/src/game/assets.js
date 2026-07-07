@@ -25,7 +25,10 @@ const imagePaths = {
     obstacles: {
         error404: '/assets/obstacles/error_404.png',
         error500: '/assets/obstacles/error_500.png',
-        cors: '/assets/obstacles/cors_bug.png',
+        cors: [
+            '/assets/obstacles/cors_bug_1.png',
+            '/assets/obstacles/cors_bug_2.png'
+        ],
         nan: '/assets/obstacles/nan_bug.png',
         merge: '/assets/obstacles/merge_bug.png'
     },
@@ -48,7 +51,7 @@ const flatImagePaths = [
     imagePaths.player.dash,
     imagePaths.obstacles.error404,
     imagePaths.obstacles.error500,
-    imagePaths.obstacles.cors,
+    ...imagePaths.obstacles.cors,
     imagePaths.obstacles.nan,
     imagePaths.obstacles.merge,
     imagePaths.collectibles.cache,
@@ -89,7 +92,7 @@ export function loadGameImages() {
         obstacles: {
             error404: loadImage(imagePaths.obstacles.error404),
             error500: loadImage(imagePaths.obstacles.error500),
-            cors: loadImage(imagePaths.obstacles.cors),
+            cors: imagePaths.obstacles.cors.map(loadImage),
             nan: loadImage(imagePaths.obstacles.nan),
             merge: loadImage(imagePaths.obstacles.merge)
         },
