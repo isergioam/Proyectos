@@ -588,18 +588,29 @@ button:disabled {
   }
 }
 
-/* Tombstone Columns Layout */
-.gameover-layout-columns {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 36px;
+/* Centered layout elements */
+.centered-layout {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  text-align: left;
+  justify-content: center;
 }
 
-.tombstone-col {
+.gameover-subtitle {
+  color: #cbd5e1 !important;
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+  margin: -8px 0 28px !important;
+  max-width: 520px;
+  text-align: center;
+}
+
+/* Tombstone Core */
+.tombstone-container {
   display: flex;
   justify-content: center;
+  margin-bottom: 36px;
+  perspective: 1000px;
 }
 
 .tombstone-body {
@@ -617,6 +628,24 @@ button:disabled {
     0 20px 40px rgba(0, 0, 0, 0.4),
     inset 0 4px 0 rgba(255, 255, 255, 0.15) !important;
   text-align: center;
+}
+
+.large-tombstone {
+  width: 320px !important;
+  height: 520px !important;
+  border-radius: 160px 160px 16px 16px !important;
+  padding: 38px 24px 20px !important;
+  border: 5px solid #1e293b !important;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    inset 0 5px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.large-tombstone:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 35px 70px rgba(0, 0, 0, 0.65),
+    inset 0 5px 0 rgba(255, 255, 255, 0.2) !important;
 }
 
 .tombstone-crack-1 {
@@ -641,7 +670,7 @@ button:disabled {
 
 .tombstone-crack-2 {
   position: absolute;
-  bottom: 60px;
+  bottom: 120px;
   left: 20px;
   width: 30px;
   height: 2px;
@@ -649,14 +678,36 @@ button:disabled {
   transform: rotate(-25deg);
 }
 
-.tombstone-rip {
-  font-family: 'Georgia', serif;
-  font-size: 20px;
-  font-weight: 900;
-  color: #1e293b;
-  letter-spacing: 0.1em;
-  margin-bottom: 12px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+.tombstone-crack-3 {
+  position: absolute;
+  top: 140px;
+  left: 18px;
+  width: 22px;
+  height: 2px;
+  background: #1e293b;
+  transform: rotate(45deg);
+}
+
+/* Engraved Text styling */
+.tombstone-main-title,
+.tombstone-name,
+.tombstone-epitaph,
+.tombstone-date,
+.tombstone-stat-label,
+.tombstone-stat-value {
+  font-family: 'Georgia', 'Times New Roman', serif !important;
+  color: #1a2333 !important;
+  text-shadow: 
+    -1px -1px 0px #0f172a, 
+    1.5px 1.5px 1px rgba(255, 255, 255, 0.28) !important;
+}
+
+.tombstone-main-title {
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.05em;
+  margin: 16px 0 20px !important;
+  text-transform: uppercase;
 }
 
 .tombstone-photo-frame {
@@ -670,6 +721,11 @@ button:disabled {
   justify-content: center;
   margin-bottom: 14px;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+}
+.large-frame {
+  width: 96px !important;
+  height: 96px !important;
+  margin-bottom: 18px !important;
 }
 
 .tombstone-duck-portrait {
@@ -685,7 +741,6 @@ button:disabled {
   display: block;
   font-size: 14px !important;
   font-weight: 800 !important;
-  color: #0f172a !important;
   text-transform: uppercase;
   margin-bottom: 8px;
   max-width: 100%;
@@ -693,33 +748,69 @@ button:disabled {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.large-name {
+  font-size: 18px !important;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px !important;
+}
 
 .tombstone-epitaph {
   margin: 0;
   font-size: 11px !important;
   line-height: 1.4 !important;
-  color: #1e293b !important;
   font-style: italic;
   font-weight: 600;
-  flex-grow: 1;
+  flex-grow: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 4px;
 }
+.large-epitaph {
+  font-size: 12px !important;
+  max-width: 250px;
+  line-height: 1.45 !important;
+  min-height: 48px;
+}
+
+.tombstone-divider {
+  width: 80%;
+  height: 2px;
+  background: #1a2333;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+  margin: 14px 0 !important;
+}
+
+.tombstone-stats {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tombstone-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed rgba(26, 35, 51, 0.2);
+  padding-bottom: 3px;
+}
+
+.tombstone-stat-label {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em;
+}
+
+.tombstone-stat-value {
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
 
 .tombstone-date {
   font-size: 10px !important;
   font-weight: 800 !important;
-  color: #1e293b !important;
   letter-spacing: 0.05em;
   margin-top: 8px;
-}
-
-@media (max-width: 768px) {
-  .gameover-layout-columns {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    text-align: center;
-  }
 }

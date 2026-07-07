@@ -43,101 +43,68 @@ function GameOver({
             <div className="decor-orb orb-1"></div>
             <div className="decor-orb orb-2"></div>
             
-            <div className="panel gameover-premium-panel">
-                <div className="gameover-layout-columns">
-                    
-                    {/* Left Column: Tombstone */}
-                    <div className="tombstone-col">
-                        <div className="tombstone-body">
-                            <div className="tombstone-crack-1"></div>
-                            <div className="tombstone-crack-2"></div>
-                            
-                            <span className="tombstone-rip">R. I. P.</span>
-                            
-                            <div className="tombstone-photo-frame">
-                                <img src="/assets/player/runner_hit.svg" alt="Duck Debugger RIP" className="tombstone-duck-portrait" />
-                            </div>
-                            
-                            <strong className="tombstone-name">{playerName || 'DuckDebugger'}</strong>
-                            <p className="tombstone-epitaph">{epitaph}</p>
-                            
-                            <span className="tombstone-date">2026 - A.D.</span>
-                        </div>
-                    </div>
-                    
-                    {/* Right Column: Game Stats and Actions */}
-                    <div className="gameover-content-col">
-                        <div className="eyebrow-badge" style={{ color: grade.color, backgroundColor: grade.bg, borderColor: grade.color }}>
-                            {grade.title}
+            <div className="panel gameover-premium-panel centered-layout">
+                <div className="eyebrow-badge" style={{ color: grade.color, backgroundColor: grade.bg, borderColor: grade.color }}>
+                    {grade.title}
+                </div>
+                
+                {/* Centered Large Tombstone */}
+                <div className="tombstone-container">
+                    <div className="tombstone-body large-tombstone">
+                        <div className="tombstone-crack-1"></div>
+                        <div className="tombstone-crack-2"></div>
+                        <div className="tombstone-crack-3"></div>
+                        
+                        <h1 className="tombstone-main-title">GAME OVER</h1>
+                        
+                        <div className="tombstone-photo-frame large-frame">
+                            <img src="/assets/player/runner_hit.svg" alt="Duck Debugger RIP" className="tombstone-duck-portrait" />
                         </div>
                         
-                        <h1 className="gameover-title">GAME OVER</h1>
-                        <p className="gameover-intro">
-                            El sistema ha sufrido una parada inesperada por un error irrecuperable.
-                        </p>
-
-                        <div className="premium-result-grid">
-                            <div className="result-card card-score">
-                                <div className="icon-wrapper">
-                                    <svg className="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <circle cx="12" cy="12" r="8" fill="rgba(245, 158, 11, 0.12)" stroke="#f59e0b" />
-                                        <path d="M12 8v8M9 12h6" stroke="#f59e0b" />
-                                    </svg>
-                                </div>
-                                <div className="card-info">
-                                    <span>Puntuación</span>
-                                    <strong>{result.score}</strong>
-                                </div>
+                        <strong className="tombstone-name large-name">{playerName || 'DuckDebugger'}</strong>
+                        <p className="tombstone-epitaph large-epitaph">{epitaph}</p>
+                        
+                        <div className="tombstone-divider"></div>
+                        
+                        <div className="tombstone-stats">
+                            <div className="tombstone-stat-row">
+                                <span className="tombstone-stat-label">PUNTUACIÓN</span>
+                                <strong className="tombstone-stat-value">{result.score}</strong>
                             </div>
-
-                            <div className="result-card card-distance">
-                                <div className="icon-wrapper">
-                                    <svg className="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M3 12h18M3 6h18M3 18h18" stroke="#38bdf8" />
-                                        <path d="M8 3v18M16 3v18" stroke="#38bdf8" strokeDasharray="3 3" />
-                                    </svg>
-                                </div>
-                                <div className="card-info">
-                                    <span>Distancia</span>
-                                    <strong>{Math.floor(result.distance)} <small>m</small></strong>
-                                </div>
+                            <div className="tombstone-stat-row">
+                                <span className="tombstone-stat-label">DISTANCIA</span>
+                                <strong className="tombstone-stat-value">{Math.floor(result.distance)} m</strong>
                             </div>
-
-                            <div className="result-card card-speed">
-                                <div className="icon-wrapper">
-                                    <svg className="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="rgba(239, 68, 68, 0.12)" stroke="#ef4444" />
-                                    </svg>
-                                </div>
-                                <div className="card-info">
-                                    <span>Velocidad final</span>
-                                    <strong>x{result.speed.toFixed(1)}</strong>
-                                </div>
+                            <div className="tombstone-stat-row">
+                                <span className="tombstone-stat-label">VELOCIDAD</span>
+                                <strong className="tombstone-stat-value">x{result.speed.toFixed(1)}</strong>
                             </div>
                         </div>
-
-                        {saveMessage && <p className="status-badge success">{saveMessage}</p>}
-                        {saveError && <p className="status-badge error">{saveError}</p>}
-
-                        <div className="premium-actions-row">
-                            <button className="btn-primary" onClick={onSaveScore} disabled={saving || alreadySaved}>
-                                {alreadySaved ? '✓ Guardado' : saving ? 'Guardando...' : 'Guardar Puntuación'}
-                            </button>
-
-                            <button className="btn-secondary" onClick={onRestart}>
-                                Volver a Correr
-                            </button>
-
-                            <button className="btn-secondary" onClick={onShowRanking}>
-                                Ver Ranking
-                            </button>
-
-                            <button className="btn-secondary" onClick={onBackToStart}>
-                                Cambiar Nombre
-                            </button>
-                        </div>
+                        
+                        <span className="tombstone-date">2026 - A.D.</span>
                     </div>
-                    
+                </div>
+
+                {saveMessage && <p className="status-badge success">{saveMessage}</p>}
+                {saveError && <p className="status-badge error">{saveError}</p>}
+
+                {/* Bottom Row: Actions */}
+                <div className="premium-actions-row">
+                    <button className="btn-primary" onClick={onSaveScore} disabled={saving || alreadySaved}>
+                        {alreadySaved ? '✓ Guardado' : saving ? 'Guardando...' : 'Guardar Puntuación'}
+                    </button>
+
+                    <button className="btn-secondary" onClick={onRestart}>
+                        Volver a Correr
+                    </button>
+
+                    <button className="btn-secondary" onClick={onShowRanking}>
+                        Ver Ranking
+                    </button>
+
+                    <button className="btn-secondary" onClick={onBackToStart}>
+                        Cambiar Nombre
+                    </button>
                 </div>
             </div>
         </section>
