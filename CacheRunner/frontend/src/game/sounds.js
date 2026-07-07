@@ -97,3 +97,45 @@ export function playFartSound() {
         // block errors
     }
 }
+
+let musicAudio = null;
+
+export function startBackgroundMusic() {
+    if (muted) return;
+    if (musicAudio) {
+        musicAudio.currentTime = 0;
+        musicAudio.play().catch(() => {});
+        return;
+    }
+    musicAudio = new Audio('/sounds/music.wav');
+    musicAudio.loop = true;
+    musicAudio.volume = 0.22;
+    musicAudio.play().catch(() => {});
+}
+
+export function stopBackgroundMusic() {
+    if (musicAudio) {
+        musicAudio.pause();
+        musicAudio.currentTime = 0;
+        musicAudio.playbackRate = 1.0;
+    }
+}
+
+export function pauseBackgroundMusic() {
+    if (musicAudio) {
+        musicAudio.pause();
+    }
+}
+
+export function resumeBackgroundMusic() {
+    if (muted) return;
+    if (musicAudio) {
+        musicAudio.play().catch(() => {});
+    }
+}
+
+export function setMusicPlaybackRate(rate) {
+    if (musicAudio) {
+        musicAudio.playbackRate = rate;
+    }
+}

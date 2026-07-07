@@ -78,9 +78,9 @@ export function loadGameImages() {
     return {
         backgrounds: {
             far: loadImage(imagePaths.backgrounds.far),
-            middle: loadImage(imagePaths.backgrounds.middle),
-            near: loadImage(imagePaths.backgrounds.near),
-            extraNear: loadImage(imagePaths.backgrounds.extraNear)
+            middle: loadImageWithColorKey(imagePaths.backgrounds.middle),
+            near: loadImageWithColorKey(imagePaths.backgrounds.near),
+            extraNear: loadImageWithColorKey(imagePaths.backgrounds.extraNear)
         },
         ground: {
             tile: loadImage(imagePaths.ground.tile)
@@ -111,4 +111,32 @@ function loadImage(src) {
     const image = new Image();
     image.src = src;
     return image;
+}
+
+function loadImageWithColorKey(src) {
+    const resultImg = new Image();
+    const sourceImg = new Image();
+    sourceImg.src = src;
+    sourceImg.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = sourceImg.width;
+        canvas.height = sourceImg.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(sourceImg, 0, 0);
+        
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i+1];
+            const b = data[i+2];
+            // Key out pure black pixels (r, g, b < 18)
+            if (r < 18 && g < 18 && b < 18) {
+                data[i+3] = 0; // Transparent
+            }
+        }
+        ctx.putImageData(imgData, 0, 0);
+        resultImg.src = canvas.toDataURL();
+    };
+    return resultImg;
 }
