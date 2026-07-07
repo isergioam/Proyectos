@@ -425,6 +425,7 @@ button:disabled {
   letter-spacing: -0.02em !important;
   background: linear-gradient(135deg, #f43f5e 0%, #fb923c 50%, #facc15 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 10px 30px rgba(244, 63, 94, 0.15);
 }
