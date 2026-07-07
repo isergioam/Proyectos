@@ -15,7 +15,12 @@ const imagePaths = {
             '/assets/player/runner_run_4.svg'
         ],
         jump: '/assets/player/runner_jump.svg',
-        hit: '/assets/player/runner_hit.svg'
+        hit: '/assets/player/runner_hit.svg',
+        flap: [
+            '/assets/player/runner_flap_1.svg',
+            '/assets/player/runner_flap_2.svg'
+        ],
+        dash: '/assets/player/runner_dash.svg'
     },
     obstacles: {
         error404: '/assets/obstacles/error_404.png',
@@ -44,7 +49,9 @@ export function loadGameImages() {
         player: {
             run: imagePaths.player.run.map(loadImage),
             jump: loadImage(imagePaths.player.jump),
-            hit: loadImage(imagePaths.player.hit)
+            hit: loadImage(imagePaths.player.hit),
+            flap: imagePaths.player.flap.map(loadImage),
+            dash: loadImage(imagePaths.player.dash)
         },
         obstacles: {
             error404: loadImage(imagePaths.obstacles.error404),

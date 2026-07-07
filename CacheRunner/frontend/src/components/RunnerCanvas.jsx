@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { playSound } from '../game/sounds';
+import { playSound, playFartSound } from '../game/sounds';
 import {
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
@@ -8,6 +8,7 @@ import {
     GROUND_Y,
     INITIAL_WORLD_SPEED,
     JUMP_FORCE,
+    MAX_FLAP_TIME,
     MAX_WORLD_SPEED,
     OBSTACLE_SPAWN_INTERVAL,
     PLAYER_HEIGHT,
@@ -35,7 +36,7 @@ function RunnerCanvas({ onStatsChange, onGameOver, onPauseChange }) {
         function handleKeyDown(event) {
             const key = event.key.toLowerCase();
 
-            if (key === ' ' || key === 'arrowup') {
+            if (key === ' ' || key === 'arrowup' || key === 'arrowright' || key === 'shift') {
                 event.preventDefault();
             }
 
@@ -124,9 +125,15 @@ function createInitialGameState() {
             width: PLAYER_WIDTH,
             height: PLAYER_HEIGHT,
             vy: 0,
-            onGround: true
+            onGround: true,
+            isFlapping: false,
+            flapTimeRemaining: MAX_FLAP_TIME,
+            isDashing: false,
+            dashTimeRemaining: 0,
+            hasDashed: false
         },
         obstacles: [],
+        particles: [],
         backgroundOffsets: {
             far: 0,
             middle: 0,
@@ -141,6 +148,7 @@ function updateGame(game, keys, deltaTime, currentTime) {
     updateDistanceAndScore(game, deltaTime);
     updateBackgroundOffsets(game, deltaTime);
     updatePlayer(game, keys, deltaTime);
+    updateParticles(game, deltaTime);
     spawnObstacles(game, currentTime);
     updateObstacles(game, deltaTime);
     checkObstacleCollisions(game);
@@ -168,20 +176,77 @@ function updateBackgroundOffsets(game, deltaTime) {
 function updatePlayer(game, keys, deltaTime) {
     const player = game.player;
     const wantsToJump = keys[' '] || keys.w || keys.arrowup;
+    const wantsToDash = keys.shift || keys.d || keys.arrowright || keys.control;
 
+    // Start Jump
     if (wantsToJump && player.onGround) {
         player.vy = JUMP_FORCE;
         player.onGround = false;
+        player.flapTimeRemaining = MAX_FLAP_TIME;
+        player.hasDashed = false;
         playSound('jump');
     }
 
-    player.vy += GRAVITY * deltaTime;
+    // Trigger Dash (only mid-air, only once per jump)
+    if (!player.onGround && wantsToDash && !player.hasDashed && !player.isDashing) {
+        player.isDashing = true;
+        player.dashTimeRemaining = 14; // dash duration (approx 230ms)
+        player.hasDashed = true;
+        player.vy = 0; // freeze vertical movement initially
+        playFartSound();
+        // Burst of fart particles!
+        for (let i = 0; i < 18; i++) {
+            game.particles.push(createFartParticle(player.x, player.y + player.height - 18));
+        }
+    }
+
+    let currentGravity = GRAVITY;
+    player.isFlapping = false;
+
+    if (player.isDashing) {
+        currentGravity = 0;
+        player.vy = 0; // maintain height
+        player.dashTimeRemaining = Math.max(0, player.dashTimeRemaining - deltaTime);
+        // Thrust the player forward relative to the screen
+        player.x = Math.min(PLAYER_X + 160, player.x + 13 * deltaTime);
+        
+        // Emit continuous fart trail!
+        if (Math.random() < 0.7) {
+            game.particles.push(createFartParticle(player.x, player.y + player.height - 18));
+        }
+
+        if (player.dashTimeRemaining <= 0) {
+            player.isDashing = false;
+        }
+    } else {
+        // Normal mid-air behavior (flapping or falling)
+        if (!player.onGround && wantsToJump && player.flapTimeRemaining > 0) {
+            player.isFlapping = true;
+            player.flapTimeRemaining = Math.max(0, player.flapTimeRemaining - deltaTime);
+            currentGravity = GRAVITY * 0.22;
+            if (player.vy > 1.2) {
+                player.vy = 1.2;
+            }
+        }
+        
+        // Slide back to default X position smoothly
+        if (player.x > PLAYER_X) {
+            player.x = Math.max(PLAYER_X, player.x - 3.5 * deltaTime);
+        }
+    }
+
+    player.vy += currentGravity * deltaTime;
     player.y += player.vy * deltaTime;
 
+    // Land on ground
     if (player.y + player.height >= GROUND_Y) {
         player.y = GROUND_Y - player.height;
         player.vy = 0;
         player.onGround = true;
+        player.flapTimeRemaining = MAX_FLAP_TIME;
+        player.isFlapping = false;
+        player.hasDashed = false;
+        player.isDashing = false;
     }
 }
 
@@ -224,6 +289,9 @@ function updateObstacles(game, deltaTime) {
 }
 
 function checkObstacleCollisions(game) {
+    if (game.player.isDashing) {
+        return; // invulnerable during dash!
+    }
     const hasCollision = game.obstacles.some((obstacle) => isColliding(game.player, obstacle));
 
     if (hasCollision) {
@@ -237,6 +305,7 @@ function drawGame(ctx, game, currentTime) {
 
     drawParallaxBackground(ctx, game.backgroundOffsets);
     drawGround(ctx, game.backgroundOffsets.ground);
+    drawParticles(ctx, game.particles);
     drawObstacles(ctx, game.obstacles);
     drawPlayer(ctx, game.player, currentTime, game.gameOver);
 
@@ -289,6 +358,40 @@ function drawPauseOverlay(ctx) {
 
     ctx.font = '18px system-ui';
     ctx.fillText('Pulsa P para continuar', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 42);
+}
+
+function createFartParticle(x, y) {
+    return {
+        x: x,
+        y: y,
+        vx: -(Math.random() * 4 + 3), // blow backwards fast
+        vy: (Math.random() * 2.4 - 1.2),  // float slightly up/down
+        radius: Math.random() * 8 + 6,
+        alpha: 1.0,
+        color: `hsla(${Math.random() * 25 + 75}, 85%, 42%, `, // yellowish-green gas
+        decay: Math.random() * 0.05 + 0.03
+    };
+}
+
+function updateParticles(game, deltaTime) {
+    game.particles = game.particles
+        .map((p) => ({
+            ...p,
+            x: p.x + p.vx * deltaTime,
+            y: p.y + p.vy * deltaTime,
+            radius: p.radius + 0.5 * deltaTime, // expand!
+            alpha: Math.max(0, p.alpha - p.decay * deltaTime)
+        }))
+        .filter((p) => p.alpha > 0);
+}
+
+function drawParticles(ctx, particles) {
+    particles.forEach((p) => {
+        ctx.fillStyle = p.color + p.alpha + ')';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+    });
 }
 
 export default RunnerCanvas;
