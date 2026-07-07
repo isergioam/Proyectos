@@ -4,7 +4,8 @@ const soundPaths = {
     gameover: '/sounds/gameover.wav',
     save: '/sounds/save.wav',
     collect: '/sounds/collect.wav',
-    shield: '/sounds/shield.wav'
+    shield: '/sounds/shield.wav',
+    doublejump: '/sounds/doublejump.wav'
 };
 
 const soundCache = {};

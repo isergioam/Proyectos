@@ -133,6 +133,7 @@ function createInitialGameState() {
         paused: false,
         gameOver: false,
         lastObstacleSpawnAt: 0,
+        jumpPressedLastFrame: false,
         player: {
             x: PLAYER_X,
             y: GROUND_Y - PLAYER_HEIGHT,
@@ -144,7 +145,8 @@ function createInitialGameState() {
             flapTimeRemaining: MAX_FLAP_TIME,
             isDashing: false,
             dashTimeRemaining: 0,
-            hasDashed: false
+            hasDashed: false,
+            jumpsAvailable: 2
         },
         obstacles: [],
         particles: [],
@@ -258,14 +260,22 @@ function updatePlayer(game, keys, deltaTime) {
     const wantsToJump = keys[' '] || keys.w || keys.arrowup;
     const wantsToDash = keys.shift || keys.d || keys.arrowright || keys.control;
 
-    // Start Jump
-    if (wantsToJump && player.onGround) {
+    // Handle Jump & Double Jump
+    if (wantsToJump && !game.jumpPressedLastFrame && player.jumpsAvailable > 0) {
         player.vy = JUMP_FORCE;
         player.onGround = false;
         player.flapTimeRemaining = MAX_FLAP_TIME;
         player.hasDashed = false;
-        playSound('jump');
+        player.jumpsAvailable -= 1;
+
+        if (player.jumpsAvailable === 1) {
+            playSound('jump');
+        } else {
+            playSound('doublejump');
+        }
     }
+
+    game.jumpPressedLastFrame = Boolean(wantsToJump);
 
     // Trigger Dash (only mid-air, only once per jump)
     if (!player.onGround && wantsToDash && !player.hasDashed && !player.isDashing) {
@@ -327,6 +337,7 @@ function updatePlayer(game, keys, deltaTime) {
         player.isFlapping = false;
         player.hasDashed = false;
         player.isDashing = false;
+        player.jumpsAvailable = 2; // Reset jumps on ground
     }
 }
 
