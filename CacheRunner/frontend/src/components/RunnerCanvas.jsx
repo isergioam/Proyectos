@@ -154,6 +154,7 @@ function createInitialGameState() {
             far: 0,
             middle: 0,
             near: 0,
+            extraNear: 0,
             ground: 0
         }
     };
@@ -251,6 +252,7 @@ function updateBackgroundOffsets(game, deltaTime) {
     game.backgroundOffsets.far = (game.backgroundOffsets.far + game.worldSpeed * 0.25 * deltaTime) % CANVAS_WIDTH;
     game.backgroundOffsets.middle = (game.backgroundOffsets.middle + game.worldSpeed * 0.45 * deltaTime) % CANVAS_WIDTH;
     game.backgroundOffsets.near = (game.backgroundOffsets.near + game.worldSpeed * 0.75 * deltaTime) % CANVAS_WIDTH;
+    game.backgroundOffsets.extraNear = (game.backgroundOffsets.extraNear + game.worldSpeed * 0.85 * deltaTime) % CANVAS_WIDTH;
     game.backgroundOffsets.ground = (game.backgroundOffsets.ground + game.worldSpeed * deltaTime) % 128;
 }
 
@@ -438,6 +440,7 @@ function drawParallaxBackground(ctx, offsets) {
     drawRepeatingImage(ctx, images.backgrounds.far, -offsets.far, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     drawRepeatingImage(ctx, images.backgrounds.middle, -offsets.middle, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     drawRepeatingImage(ctx, images.backgrounds.near, -offsets.near, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    drawRepeatingImage(ctx, images.backgrounds.extraNear, -offsets.extraNear, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 }
 
 function drawGround(ctx, offset) {

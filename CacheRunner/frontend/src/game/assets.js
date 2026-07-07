@@ -2,7 +2,8 @@ const imagePaths = {
     backgrounds: {
         far: '/assets/backgrounds/bg_layer_1.png',
         middle: '/assets/backgrounds/bg_layer_2.png',
-        near: '/assets/backgrounds/bg_layer_3.png'
+        near: '/assets/backgrounds/bg_layer_3.png',
+        extraNear: '/assets/backgrounds/bg_layer_4.png'
     },
     ground: {
         tile: '/assets/ground/ground_tile.png'
@@ -43,6 +44,7 @@ const flatImagePaths = [
     imagePaths.backgrounds.far,
     imagePaths.backgrounds.middle,
     imagePaths.backgrounds.near,
+    imagePaths.backgrounds.extraNear,
     imagePaths.ground.tile,
     ...imagePaths.player.run,
     imagePaths.player.jump,
@@ -77,7 +79,8 @@ export function loadGameImages() {
         backgrounds: {
             far: loadImage(imagePaths.backgrounds.far),
             middle: loadImage(imagePaths.backgrounds.middle),
-            near: loadImage(imagePaths.backgrounds.near)
+            near: loadImage(imagePaths.backgrounds.near),
+            extraNear: loadImage(imagePaths.backgrounds.extraNear)
         },
         ground: {
             tile: loadImage(imagePaths.ground.tile)
