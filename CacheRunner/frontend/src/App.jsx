@@ -4,8 +4,10 @@ import Hud from './components/Hud';
 import RunnerCanvas from './components/RunnerCanvas';
 import GameOver from './components/GameOver';
 import Ranking from './components/Ranking';
+import LoadingScreen from './components/LoadingScreen';
 import { getGameConfig, saveScore } from './services/api';
 import { playSound, preloadSounds } from './game/sounds';
+import { preloadImages } from './game/assets';
 import './App.css';
 
 const initialStats = {
@@ -32,9 +34,20 @@ function App() {
   const [alreadySaved, setAlreadySaved] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
   const [saveError, setSaveError] = useState('');
+  const [assetsReady, setAssetsReady] = useState(false);
 
   useEffect(() => {
     preloadSounds();
+
+    async function loadAssets() {
+      try {
+        await preloadImages();
+      } finally {
+        setAssetsReady(true);
+      }
+    }
+
+    loadAssets();
 
     async function loadConfig() {
       try {
@@ -124,6 +137,10 @@ function App() {
     setResult(finalResult);
     setScreen('gameover');
   }, []);
+
+  if (!assetsReady) {
+    return <LoadingScreen />;
+  }
 
   return (
     <main className="app">

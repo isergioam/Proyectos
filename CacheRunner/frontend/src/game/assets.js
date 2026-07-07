@@ -36,6 +36,39 @@ const imagePaths = {
     }
 };
 
+const flatImagePaths = [
+    imagePaths.backgrounds.far,
+    imagePaths.backgrounds.middle,
+    imagePaths.backgrounds.near,
+    imagePaths.ground.tile,
+    ...imagePaths.player.run,
+    imagePaths.player.jump,
+    imagePaths.player.hit,
+    ...imagePaths.player.flap,
+    imagePaths.player.dash,
+    imagePaths.obstacles.error404,
+    imagePaths.obstacles.error500,
+    imagePaths.obstacles.cors,
+    imagePaths.obstacles.nan,
+    imagePaths.obstacles.merge,
+    imagePaths.collectibles.cache,
+    imagePaths.collectibles.cookie,
+    imagePaths.collectibles.shield
+];
+
+export function preloadImages() {
+    const promises = flatImagePaths.map((src) => {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = resolve;
+            image.onerror = reject;
+            image.src = src;
+        });
+    });
+
+    return Promise.all(promises);
+}
+
 export function loadGameImages() {
     return {
         backgrounds: {
