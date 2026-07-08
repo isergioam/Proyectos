@@ -1,0 +1,101 @@
+name: Deploy Hub and Projects to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Root Dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          fi
+
+      - name: Create Combined Dist Directory
+        run: mkdir -p dist
+
+      - name: Copy Root Dashboard Assets
+        run: |
+          cp index.html dist/
+          cp style.css dist/
+          cp app.js dist/
+
+      - name: Build CacheRunner Frontend
+        run: |
+          cd CacheRunner/frontend
+          npm install
+          npm run build
+          cd ../..
+          cp -r CacheRunner/frontend/dist dist/CacheRunner
+
+      - name: Build CodeInvaders Frontend
+        run: |
+          cd CodeInvaders/frontend
+          npm install
+          npm run build
+          cd ../..
+          cp -r CodeInvaders/frontend/dist dist/CodeInvaders
+
+      - name: Build FitQuest Frontend
+        run: |
+          cd FitQuest/frontend
+          npm install
+          npm run build
+          cd ../..
+          cp -r FitQuest/frontend/dist dist/FitQuest
+
+      - name: Build Prestamos Frontend
+        run: |
+          cd Prestamos/frontend
+          npm install
+          npm run build
+          cd ../..
+          cp -r Prestamos/frontend/dist dist/Prestamos
+
+      - name: Build Recetas Frontend
+        run: |
+          cd Recetas/frontend-recetas
+          npm install
+          npm run build
+          cd ../..
+          cp -r Recetas/frontend-recetas/dist dist/Recetas
+
+      - name: Build Tienda Frontend
+        run: |
+          cd Tienda/frontend-tienda
+          npm install
+          npm run build
+          cd ../..
+          cp -r Tienda/frontend-tienda/dist dist/Tienda
+
+      - name: Build Documentos Frontend
+        run: |
+          cd Documentos/frontend-documentos
+          npm install
+          npm run build
+          cd ../..
+          cp -r Documentos/frontend-documentos/dist dist/Documentos
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages

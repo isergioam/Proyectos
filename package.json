@@ -1,0 +1,26 @@
+{
+  "name": "proyectos-hub",
+  "version": "1.0.0",
+  "description": "Hub central de los proyectos full-stack de Isergioam",
+  "main": "index.html",
+  "scripts": {
+    "install:all": "npm run install:cacherunner && npm run install:codeinvaders && npm run install:documentos && npm run install:fitquest && npm run install:prestamos && npm run install:recetas && npm run install:tienda",
+    "install:cacherunner": "npm install --prefix CacheRunner/frontend && npm install --prefix CacheRunner/backend",
+    "install:codeinvaders": "npm install --prefix CodeInvaders/frontend && npm install --prefix CodeInvaders/backend",
+    "install:documentos": "npm install --prefix Documentos/frontend-documentos && npm install --prefix Documentos/backend-documentos",
+    "install:fitquest": "npm install --prefix FitQuest/frontend && npm install --prefix FitQuest/backend",
+    "install:prestamos": "npm install --prefix Prestamos/frontend && npm install --prefix Prestamos/backend",
+    "install:recetas": "npm install --prefix Recetas/frontend-recetas && npm install --prefix Recetas/backend-recetas",
+    "install:tienda": "npm install --prefix Tienda/frontend-tienda && npm install --prefix Tienda/backend-tienda",
+    "dev:cacherunner": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix CacheRunner/frontend\" \"npm run dev --prefix CacheRunner/backend\"",
+    "dev:codeinvaders": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix CodeInvaders/frontend\" \"npm run dev --prefix CodeInvaders/backend\"",
+    "dev:documentos": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix Documentos/frontend-documentos\" \"npm run dev --prefix Documentos/backend-documentos\"",
+    "dev:fitquest": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix FitQuest/frontend\" \"npm run dev --prefix FitQuest/backend\"",
+    "dev:prestamos": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix Prestamos/frontend\" \"npm run dev --prefix Prestamos/backend\"",
+    "dev:recetas": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix Recetas/frontend-recetas\" \"npm run dev --prefix Recetas/backend-recetas\"",
+    "dev:tienda": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix Tienda/frontend-tienda\" \"npm run dev --prefix Tienda/backend-tienda\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
