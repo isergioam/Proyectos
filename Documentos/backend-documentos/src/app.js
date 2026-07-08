@@ -8,9 +8,7 @@ import { errorHandler } from './middlewares/error.middleware.js'
 
 const app = express()
 
-app.use(cors({
-    origin: process.env.FRONTEND_URL || '*'
-}))
+app.use(cors())
 
 app.use(express.json())
 app.use('/uploads', express.static('src/uploads'))

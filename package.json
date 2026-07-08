@@ -21,6 +21,7 @@
     "dev:tienda": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev --prefix Tienda/frontend-tienda\" \"npm run dev --prefix Tienda/backend-tienda\""
   },
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "mysql2": "^3.22.6"
   }
 }
