@@ -5,7 +5,7 @@ const path = require('path');
 const gameConfig = require('./gameConfig');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const SCORES_FILE = path.join(__dirname, 'data', 'scores.json');
 
 app.use(cors());
