@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos Hub - Colección de Aplicaciones Full-Stack</title>
+    <meta name="description" content="Explora, ejecuta y despliega la colección de proyectos y juegos interactivos full-stack desarrollados con React, Node.js y MySQL.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glow-bg"></div>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo-area">
+                <div class="avatar-glow">
+                    <i class="fa-solid fa-cubes-stacked logo-icon"></i>
+                </div>
+                <div class="title-meta">
+                    <h1 id="main-title">Isergioam's Project Hub</h1>
+                    <p class="subtitle">Una suite completa de juegos, herramientas de productividad y aplicaciones web full-stack.</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="https://github.com/isergioam" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="btn-github-profile">
+                    <i class="fa-brands fa-github"></i> Mi GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Dashboard Statistics -->
+        <section class="stats-bar" aria-label="Estadísticas de la Suite">
+            <div class="stat-card" id="stat-total">
+                <span class="stat-value">7</span>
+                <span class="stat-label">Proyectos Activos</span>
+            </div>
+            <div class="stat-card" id="stat-frontend">
+                <span class="stat-value">React / Vite</span>
+                <span class="stat-label">Tecnología Frontend</span>
+            </div>
+            <div class="stat-card" id="stat-backend">
+                <span class="stat-value">Node.js</span>
+                <span class="stat-label">Tecnología Backend</span>
+            </div>
+            <div class="stat-card" id="stat-db">
+                <span class="stat-value">MySQL & JSON</span>
+                <span class="stat-label">Almacenamiento de Datos</span>
+            </div>
+        </section>
+
+        <!-- Filters and Search Bar -->
+        <section class="control-panel" aria-label="Controles de búsqueda y filtros">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" placeholder="Buscar proyectos por nombre, tecnología o categoría..." aria-label="Buscar proyectos">
+            </div>
+            <div class="filter-tabs" role="tablist">
+                <button class="filter-tab active" role="tab" aria-selected="true" id="filter-all" data-filter="all">Todos</button>
+                <button class="filter-tab" role="tab" aria-selected="false" id="filter-games" data-filter="juegos">Juegos</button>
+                <button class="filter-tab" role="tab" aria-selected="false" id="filter-productivity" data-filter="productividad">Productividad</button>
+                <button class="filter-tab" role="tab" aria-selected="false" id="filter-db" data-filter="db">Requiere DB (MySQL)</button>
+            </div>
+        </section>
+
+        <!-- Grid of Project Cards -->
+        <section class="projects-grid" id="projects-grid-container" aria-label="Listado de Proyectos">
+            <!-- Project cards will be rendered dynamically by JavaScript for better interactivity -->
+        </section>
+    </main>
+
+    <!-- Detailed Project Info Modal -->
+    <div class="modal-backdrop" id="project-modal" aria-hidden="true" role="dialog">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close-btn" aria-label="Cerrar modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-header">
+                <div class="modal-header-icon" id="modal-project-icon">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div>
+                    <span class="badge" id="modal-project-tag">Categoría</span>
+                    <h2 class="modal-title" id="modal-project-title">Nombre del Proyecto</h2>
+                </div>
+            </div>
+
+            <!-- Modal Navigation Tabs -->
+            <div class="modal-tabs" role="tablist">
+                <button class="modal-tab active" role="tab" aria-selected="true" id="tab-info" data-tab="content-info">
+                    <i class="fa-solid fa-info-circle"></i> Info General
+                </button>
+                <button class="modal-tab" role="tab" aria-selected="false" id="tab-local" data-tab="content-local">
+                    <i class="fa-solid fa-laptop-code"></i> Ejecución Local
+                </button>
+                <button class="modal-tab" role="tab" aria-selected="false" id="tab-deploy" data-tab="content-deploy">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> ¿Cómo Subirlo a Internet?
+                </button>
+            </div>
+
+            <!-- Modal Content Bodies -->
+            <div class="modal-body-wrapper">
+                <!-- Info Tab -->
+                <div class="modal-body-content active" id="content-info">
+                    <p class="project-long-desc" id="modal-project-desc">Descripción larga del proyecto...</p>
+                    <h3 class="section-heading">Características principales</h3>
+                    <ul class="features-list" id="modal-project-features">
+                        <!-- Rendered by JS -->
+                    </ul>
+                    <h3 class="section-heading">Tecnologías Utilizadas</h3>
+                    <div class="tech-stack" id="modal-project-tech">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Local Run Tab -->
+                <div class="modal-body-content" id="content-local">
+                    <div class="alert-box" id="modal-db-alert">
+                        <i class="fa-solid fa-database alert-icon"></i>
+                        <div>
+                            <strong id="modal-db-alert-title">Requiere Base de Datos</strong>
+                            <p id="modal-db-alert-desc">Este proyecto utiliza MySQL. Necesitas levantar una base de datos local y configurar las variables de entorno.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="section-heading">Pasos para arrancar el proyecto:</h3>
+                    
+                    <div class="step-guide">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-detail">
+                                <strong>Abrir terminal en el directorio raíz</strong>
+                                <p>Asegúrate de estar en la carpeta principal del repositorio clonado.</p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-detail">
+                                <strong>Instalar todas las dependencias</strong>
+                                <p>Hemos configurado scripts automáticos en el <code>package.json</code> principal para que no tengas que ir carpeta por carpeta.</p>
+                                <div class="code-block-wrapper">
+                                    <pre><code id="code-install">npm run install:cacherunner</code></pre>
+                                    <button class="copy-btn" data-copy-target="code-install" aria-label="Copiar código">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-item" id="step-db-setup">
+                            <div class="step-number">3</div>
+                            <div class="step-detail">
+                                <strong>Configurar base de datos MySQL (Si aplica)</strong>
+                                <p>Crea una base de datos MySQL en tu servidor local e importa el archivo SQL del proyecto. Configura el archivo <code>.env</code> en el directorio backend del proyecto con tus credenciales.</p>
+                                <div class="code-block-wrapper">
+                                    <pre><code id="code-db-file"># Archivo de esquema:\n/FitQuest/backend/schema.sql</code></pre>
+                                    <button class="copy-btn" data-copy-target="code-db-file" aria-label="Copiar ruta">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number" id="step-run-num">4</div>
+                            <div class="step-detail">
+                                <strong>Arrancar frontend y backend concurrentemente</strong>
+                                <p>Ejecuta el siguiente comando para levantar el servidor de desarrollo del Frontend (Vite) y el Backend (Node/Express) al mismo tiempo:</p>
+                                <div class="code-block-wrapper">
+                                    <pre><code id="code-run">npm run dev:cacherunner</code></pre>
+                                    <button class="copy-btn" data-copy-target="code-run" aria-label="Copiar código">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Web Deployment Tab -->
+                <div class="modal-body-content" id="content-deploy">
+                    <p class="section-intro">Para que la gente pueda ejecutar este proyecto desde sus casas de forma 100% online y gratuita, debes desplegar el frontend y el backend por separado:</p>
+                    
+                    <div class="deploy-grid">
+                        <div class="deploy-card">
+                            <div class="deploy-card-header">
+                                <i class="fa-solid fa-laptop-code deploy-icon-fe"></i>
+                                <div>
+                                    <h4>1. Desplegar el Frontend (Cliente React)</h4>
+                                    <span class="deploy-service">GitHub Pages / Vercel / Netlify</span>
+                                </div>
+                            </div>
+                            <p>Despliega el frontend estático. Dado que son aplicaciones SPA con React Router, la opción más rápida y recomendada es <strong>Vercel</strong> o <strong>Netlify</strong>, que admiten subcarpetas de monorepos de forma nativa.</p>
+                            <ul class="deploy-steps-list">
+                                <li>Crea una cuenta en Vercel y vincula tu GitHub.</li>
+                                <li>Crea un "New Project" y selecciona este repositorio.</li>
+                                <li>En <strong>Root Directory</strong>, selecciona la carpeta del frontend (ej: <code>CacheRunner/frontend</code>).</li>
+                                <li>En Variables de Entorno, añade <code>VITE_API_URL</code> apuntando a la URL del backend desplegado.</li>
+                            </ul>
+                        </div>
+
+                        <div class="deploy-card">
+                            <div class="deploy-card-header">
+                                <i class="fa-solid fa-server deploy-icon-be"></i>
+                                <div>
+                                    <h4>2. Desplegar el Backend (Servidor Node)</h4>
+                                    <span class="deploy-service">Render / Koyeb / Railway</span>
+                                </div>
+                            </div>
+                            <p>El backend necesita un servidor Node.js activo y, en algunos casos, una base de datos MySQL en la nube (como la capa gratuita de Aiven o PlanetScale, o Supabase/Neon si migras a PostgreSQL).</p>
+                            <ul class="deploy-steps-list">
+                                <li>Despliega en Render creando una "Web Service" vinculada a este repositorio.</li>
+                                <li>Configura el <strong>Root Directory</strong> al backend (ej: <code>CacheRunner/backend</code>).</li>
+                                <li>Comando de inicio: <code>npm install && npm start</code>.</li>
+                                <li>Si el proyecto requiere base de datos, añade las variables de entorno de conexión (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT) correspondientes a tu base de datos remota.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="deploy-note">
+                        <i class="fa-solid fa-circle-exclamation note-icon"></i>
+                        <p><strong>Nota importante sobre las URLs de la API:</strong> Para que el frontend pueda hablar con el backend en producción, debes cambiar las URLs hardcodeadas de <code>http://localhost:3000</code> a <code>import.meta.env.VITE_API_URL || 'http://localhost:3000'</code> en tu código (ej: en el archivo <code>services/api.js</code>).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>&copy; 2026 Isergioam. Diseñado con <i class="fa-solid fa-heart heart-icon"></i> para desarrolladores y entusiastas.</p>
+            <p class="footer-tagline">Construyendo el futuro de la web un componente a la vez.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="app.js"></script>
+</body>
+</html>
