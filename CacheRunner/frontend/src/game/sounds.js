@@ -1,11 +1,11 @@
 const soundPaths = {
-    jump: '/sounds/jump.wav',
-    hit: '/sounds/hit.wav',
-    gameover: '/sounds/gameover.wav',
-    save: '/sounds/save.wav',
-    collect: '/sounds/collect.wav',
-    shield: '/sounds/shield.wav',
-    doublejump: '/sounds/doublejump.wav'
+    jump: 'sounds/jump.wav',
+    hit: 'sounds/hit.wav',
+    gameover: 'sounds/gameover.wav',
+    save: 'sounds/save.wav',
+    collect: 'sounds/collect.wav',
+    shield: 'sounds/shield.wav',
+    doublejump: 'sounds/doublejump.wav'
 };
 
 const soundCache = {};
@@ -107,7 +107,7 @@ export function startBackgroundMusic() {
         musicAudio.play().catch(() => {});
         return;
     }
-    musicAudio = new Audio('/sounds/music.wav');
+    musicAudio = new Audio('sounds/music.wav');
     musicAudio.loop = true;
     musicAudio.volume = 0.22;
     musicAudio.play().catch(() => {});

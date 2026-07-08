@@ -1,42 +1,42 @@
 const imagePaths = {
     backgrounds: {
-        far: '/assets/backgrounds/bg_layer_1.png',
-        middle: '/assets/backgrounds/bg_layer_2.png',
-        near: '/assets/backgrounds/bg_layer_3.png',
-        extraNear: '/assets/backgrounds/bg_layer_4.png'
+        far: 'assets/backgrounds/bg_layer_1.png',
+        middle: 'assets/backgrounds/bg_layer_2.png',
+        near: 'assets/backgrounds/bg_layer_3.png',
+        extraNear: 'assets/backgrounds/bg_layer_4.png'
     },
     ground: {
-        tile: '/assets/ground/ground_tile.png'
+        tile: 'assets/ground/ground_tile.png'
     },
     player: {
         run: [
-            '/assets/player/runner_run_1.svg',
-            '/assets/player/runner_run_2.svg',
-            '/assets/player/runner_run_3.svg',
-            '/assets/player/runner_run_4.svg'
+            'assets/player/runner_run_1.svg',
+            'assets/player/runner_run_2.svg',
+            'assets/player/runner_run_3.svg',
+            'assets/player/runner_run_4.svg'
         ],
-        jump: '/assets/player/runner_jump.svg',
-        hit: '/assets/player/runner_hit.svg',
+        jump: 'assets/player/runner_jump.svg',
+        hit: 'assets/player/runner_hit.svg',
         flap: [
-            '/assets/player/runner_flap_1.svg',
-            '/assets/player/runner_flap_2.svg'
+            'assets/player/runner_flap_1.svg',
+            'assets/player/runner_flap_2.svg'
         ],
-        dash: '/assets/player/runner_dash.svg'
+        dash: 'assets/player/runner_dash.svg'
     },
     obstacles: {
-        error404: '/assets/obstacles/error_404.png',
-        error500: '/assets/obstacles/error_500.png',
+        error404: 'assets/obstacles/error_404.png',
+        error500: 'assets/obstacles/error_500.png',
         cors: [
-            '/assets/obstacles/cors_bug_1.png',
-            '/assets/obstacles/cors_bug_2.png'
+            'assets/obstacles/cors_bug_1.png',
+            'assets/obstacles/cors_bug_2.png'
         ],
-        nan: '/assets/obstacles/nan_bug.png',
-        merge: '/assets/obstacles/merge_bug.png'
+        nan: 'assets/obstacles/nan_bug.png',
+        merge: 'assets/obstacles/merge_bug.png'
     },
     collectibles: {
-        cache: '/assets/collectibles/cache_token.png',
-        cookie: '/assets/collectibles/cookie.png',
-        shield: '/assets/collectibles/shield_200.png'
+        cache: 'assets/collectibles/cache_token.png',
+        cookie: 'assets/collectibles/cookie.png',
+        shield: 'assets/collectibles/shield_200.png'
     }
 };
 
