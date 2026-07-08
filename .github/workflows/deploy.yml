@@ -38,6 +38,8 @@ jobs:
           cp app.js dist/
 
       - name: Build CacheRunner Frontend
+        env:
+          VITE_API_URL: https://cacherunner-backend.onrender.com/api
         run: |
           cd CacheRunner/frontend
           npm install
