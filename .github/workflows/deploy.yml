@@ -48,6 +48,8 @@ jobs:
           cp -r CacheRunner/frontend/dist dist/CacheRunner
 
       - name: Build CodeInvaders Frontend
+        env:
+          VITE_API_URL: https://codeinvaders-backend.onrender.com/api
         run: |
           cd CodeInvaders/frontend
           npm install
@@ -56,6 +58,8 @@ jobs:
           cp -r CodeInvaders/frontend/dist dist/CodeInvaders
 
       - name: Build FitQuest Frontend
+        env:
+          VITE_API_URL: https://fitquest-backend-0ps7.onrender.com/api
         run: |
           cd FitQuest/frontend
           npm install
@@ -64,6 +68,8 @@ jobs:
           cp -r FitQuest/frontend/dist dist/FitQuest
 
       - name: Build Prestamos Frontend
+        env:
+          VITE_API_URL: https://prestamos-backend-ct5p.onrender.com/api
         run: |
           cd Prestamos/frontend
           npm install
@@ -72,6 +78,8 @@ jobs:
           cp -r Prestamos/frontend/dist dist/Prestamos
 
       - name: Build Recetas Frontend
+        env:
+          VITE_API_URL: https://recetas-backend-azkw.onrender.com/api
         run: |
           cd Recetas/frontend-recetas
           npm install
@@ -80,6 +88,8 @@ jobs:
           cp -r Recetas/frontend-recetas/dist dist/Recetas
 
       - name: Build Tienda Frontend
+        env:
+          VITE_API_URL: https://tienda-backend-4wi5.onrender.com/api
         run: |
           cd Tienda/frontend-tienda
           npm install
@@ -88,6 +98,8 @@ jobs:
           cp -r Tienda/frontend-tienda/dist dist/Tienda
 
       - name: Build Documentos Frontend
+        env:
+          VITE_API_URL: https://documentos-backend.onrender.com/api
         run: |
           cd Documentos/frontend-documentos
           npm install
