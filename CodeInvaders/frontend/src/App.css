@@ -212,6 +212,7 @@ h2 {
 }
 
 .canvas-shell {
+  position: relative;
   display: grid;
   place-items: center;
   padding: 18px;
@@ -380,4 +381,150 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.62;
   transform: none !important;
+}
+
+/* Mobile Touch Controls Overlay */
+.mobile-controls {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  z-index: 10;
+}
+
+.mobile-top-row {
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.mobile-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: none;
+  margin-top: auto;
+}
+
+.mobile-btn {
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.1s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+.mobile-btn:active {
+  transform: scale(0.85);
+  filter: brightness(1.25);
+}
+
+.btn-pause {
+  width: 44px;
+  height: 44px;
+  background: rgba(167, 139, 250, 0.2);
+  border: 2px solid #a78bfa;
+  color: #ddd6fe;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.btn-shoot {
+  width: 76px;
+  height: 76px;
+  background: rgba(245, 158, 11, 0.22);
+  border: 3px solid #f59e0b;
+  color: #fef08a;
+  border-radius: 50%;
+  font-family: 'Inter', monospace;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
+}
+
+/* D-Pad Controls */
+.mobile-dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(3, 44px);
+  gap: 4px;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dpad-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(34, 211, 238, 0.18);
+  border: 2px solid #22d3ee;
+  color: #a5f3fc;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.25);
+  cursor: pointer;
+  transition: background 0.1s, transform 0.1s;
+  touch-action: none;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dpad-btn:active {
+  background: rgba(34, 211, 238, 0.45);
+  transform: scale(0.9);
+}
+
+.btn-up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.btn-left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.dpad-center {
+  grid-column: 2;
+  grid-row: 2;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed rgba(34, 211, 238, 0.3);
+  border-radius: 6px;
+}
+
+.btn-right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.btn-down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+/* Prevent text selections & bouncing globally on game screen on mobile */
+.game-screen,
+.game-canvas,
+.hud {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }

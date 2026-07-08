@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     BULLET_COOLDOWN,
     BULLET_HEIGHT,
@@ -50,6 +50,43 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
     const enemySpeedMultiplier = difficultyConfig?.enemySpeedMultiplier || 1;
     const spawnMultiplier = difficultyConfig?.spawnMultiplier || 1;
 
+    const [localPaused, setLocalPaused] = useState(false);
+    const [showTouchControls, setShowTouchControls] = useState(false);
+
+    const togglePauseRef = useRef(null);
+    togglePauseRef.current = () => {
+        const game = gameRef.current;
+        game.paused = !game.paused;
+        setLocalPaused(game.paused);
+        onPauseChange(game.paused);
+    };
+
+    useEffect(() => {
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const hasTouchHash = window.location.hash === '#touch';
+        setShowTouchControls(isTouch || isMobileUA || hasTouchHash);
+    }, []);
+
+    const handleShootStart = (e) => {
+        e.preventDefault();
+        keysRef.current[' '] = true;
+    };
+
+    const handleShootEnd = (e) => {
+        e.preventDefault();
+        keysRef.current[' '] = false;
+    };
+
+    const handleShootCancel = (e) => {
+        e.preventDefault();
+        keysRef.current[' '] = false;
+    };
+
+    const handlePauseTap = (e) => {
+        e.preventDefault();
+        togglePauseRef.current();
+    };
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -65,8 +102,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
             }
 
             if (key === 'p') {
-                gameRef.current.paused = !gameRef.current.paused;
-                onPauseChange(gameRef.current.paused);
+                togglePauseRef.current();
                 return;
             }
 
@@ -1276,7 +1312,7 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
         ctx.fillText('PAUSA', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
 
         ctx.font = '20px system-ui';
-        ctx.fillText('Pulsa P para continuar', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 42);
+        ctx.fillText('Pulsa P o el botón de pausa para continuar', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 42);
         ctx.restore();
     }
 
@@ -1292,6 +1328,79 @@ function GameCanvas({ difficultyConfig, onStatsChange, onGameOver, onPauseChange
                 height={CANVAS_HEIGHT}
                 className="game-canvas"
             />
+            {showTouchControls && (
+                <div className="mobile-controls">
+                    <div className="mobile-top-row">
+                        <button
+                            className="mobile-btn btn-pause"
+                            onTouchStart={handlePauseTap}
+                            onMouseDown={handlePauseTap}
+                        >
+                            {localPaused ? '▶' : '⏸'}
+                        </button>
+                    </div>
+                    <div className="mobile-bottom-row">
+                        <div className="mobile-dpad">
+                            <button
+                                className="dpad-btn btn-up"
+                                onTouchStart={(e) => { e.preventDefault(); keysRef.current['w'] = true; }}
+                                onTouchEnd={(e) => { e.preventDefault(); keysRef.current['w'] = false; }}
+                                onTouchCancel={(e) => { e.preventDefault(); keysRef.current['w'] = false; }}
+                                onMouseDown={(e) => { e.preventDefault(); keysRef.current['w'] = true; }}
+                                onMouseUp={(e) => { e.preventDefault(); keysRef.current['w'] = false; }}
+                                onMouseLeave={() => { keysRef.current['w'] = false; }}
+                            >
+                                ▲
+                            </button>
+                            <button
+                                className="dpad-btn btn-left"
+                                onTouchStart={(e) => { e.preventDefault(); keysRef.current['a'] = true; }}
+                                onTouchEnd={(e) => { e.preventDefault(); keysRef.current['a'] = false; }}
+                                onTouchCancel={(e) => { e.preventDefault(); keysRef.current['a'] = false; }}
+                                onMouseDown={(e) => { e.preventDefault(); keysRef.current['a'] = true; }}
+                                onMouseUp={(e) => { e.preventDefault(); keysRef.current['a'] = false; }}
+                                onMouseLeave={() => { keysRef.current['a'] = false; }}
+                            >
+                                ◀
+                            </button>
+                            <div className="dpad-center"></div>
+                            <button
+                                className="dpad-btn btn-right"
+                                onTouchStart={(e) => { e.preventDefault(); keysRef.current['d'] = true; }}
+                                onTouchEnd={(e) => { e.preventDefault(); keysRef.current['d'] = false; }}
+                                onTouchCancel={(e) => { e.preventDefault(); keysRef.current['d'] = false; }}
+                                onMouseDown={(e) => { e.preventDefault(); keysRef.current['d'] = true; }}
+                                onMouseUp={(e) => { e.preventDefault(); keysRef.current['d'] = false; }}
+                                onMouseLeave={() => { keysRef.current['d'] = false; }}
+                            >
+                                ▶
+                            </button>
+                            <button
+                                className="dpad-btn btn-down"
+                                onTouchStart={(e) => { e.preventDefault(); keysRef.current['s'] = true; }}
+                                onTouchEnd={(e) => { e.preventDefault(); keysRef.current['s'] = false; }}
+                                onTouchCancel={(e) => { e.preventDefault(); keysRef.current['s'] = false; }}
+                                onMouseDown={(e) => { e.preventDefault(); keysRef.current['s'] = true; }}
+                                onMouseUp={(e) => { e.preventDefault(); keysRef.current['s'] = false; }}
+                                onMouseLeave={() => { keysRef.current['s'] = false; }}
+                            >
+                                ▼
+                            </button>
+                        </div>
+                        <button
+                            className="mobile-btn btn-shoot"
+                            onTouchStart={handleShootStart}
+                            onTouchEnd={handleShootEnd}
+                            onTouchCancel={handleShootCancel}
+                            onMouseDown={(e) => { e.preventDefault(); keysRef.current[' '] = true; }}
+                            onMouseUp={(e) => { e.preventDefault(); keysRef.current[' '] = false; }}
+                            onMouseLeave={() => { keysRef.current[' '] = false; }}
+                        >
+                            DISPARO
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

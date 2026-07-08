@@ -67,9 +67,13 @@ function StartScreen({ onStart, onShowRanking, config }) {
 
                 <div className="controls-box">
                     <h3>Controles e Instrucciones</h3>
-                    <p><strong>WASD</strong> o <strong>flechas</strong>: mover nave</p>
-                    <p><strong>Espacio</strong>: disparar</p>
-                    <p><strong>P</strong>: pausar o continuar</p>
+                    <p><strong>Teclado:</strong></p>
+                    <p>• <strong>WASD / Flechas</strong>: mover nave</p>
+                    <p>• <strong>Espacio</strong>: disparar (mantén pulsado para ráfaga continua)</p>
+                    <p>• <strong>P</strong>: pausar o continuar</p>
+                    <p style={{ marginTop: '10px', color: '#22d3ee' }}>
+                        <strong>Móvil:</strong> Usa la cruceta virtual (D-Pad) para moverte y el botón de DISPARO.
+                    </p>
                     <p style={{ marginTop: '12px', color: '#fb7185', fontSize: '13px', fontWeight: 'bold' }}>
                         ⚠️ ¡Cuidado! Los bugs disparan excepciones destructivas de color rojo.
                     </p>
