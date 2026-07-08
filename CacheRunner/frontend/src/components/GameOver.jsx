@@ -58,7 +58,7 @@ function GameOver({
                         <h1 className="tombstone-main-title">GAME OVER</h1>
                         
                         <div className="tombstone-photo-frame large-frame">
-                            <img src="/assets/player/runner_hit.svg" alt="Duck Debugger RIP" className="tombstone-duck-portrait" />
+                            <img src="assets/player/runner_hit.svg" alt="Duck Debugger RIP" className="tombstone-duck-portrait" />
                         </div>
                         
                         <strong className="tombstone-name large-name">{playerName || 'DuckDebugger'}</strong>
