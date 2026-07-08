@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     playSound,
     playFartSound,
@@ -42,6 +42,64 @@ function RunnerCanvas({ onStatsChange, onGameOver, onPauseChange }) {
     const previousTimeRef = useRef(0);
     const gameOverSentRef = useRef(false);
 
+    const [localPaused, setLocalPaused] = useState(false);
+    const [showTouchControls, setShowTouchControls] = useState(false);
+
+    const togglePauseRef = useRef(null);
+    togglePauseRef.current = () => {
+        const game = gameRef.current;
+        game.paused = !game.paused;
+        setLocalPaused(game.paused);
+        onPauseChange(game.paused);
+        if (game.paused) {
+            pauseBackgroundMusic();
+        } else {
+            resumeBackgroundMusic();
+        }
+    };
+
+    useEffect(() => {
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const hasTouchHash = window.location.hash === '#touch';
+        setShowTouchControls(isTouch || isMobileUA || hasTouchHash);
+    }, []);
+
+    const handleJumpStart = (e) => {
+        e.preventDefault();
+        keysRef.current[' '] = true;
+    };
+
+    const handleJumpEnd = (e) => {
+        e.preventDefault();
+        keysRef.current[' '] = false;
+    };
+
+    const handleJumpCancel = (e) => {
+        e.preventDefault();
+        keysRef.current[' '] = false;
+    };
+
+    const handleDashStart = (e) => {
+        e.preventDefault();
+        keysRef.current['shift'] = true;
+    };
+
+    const handleDashEnd = (e) => {
+        e.preventDefault();
+        keysRef.current['shift'] = false;
+    };
+
+    const handleDashCancel = (e) => {
+        e.preventDefault();
+        keysRef.current['shift'] = false;
+    };
+
+    const handlePauseTap = (e) => {
+        e.preventDefault();
+        togglePauseRef.current();
+    };
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -56,13 +114,7 @@ function RunnerCanvas({ onStatsChange, onGameOver, onPauseChange }) {
             }
 
             if (key === 'p') {
-                gameRef.current.paused = !gameRef.current.paused;
-                onPauseChange(gameRef.current.paused);
-                if (gameRef.current.paused) {
-                    pauseBackgroundMusic();
-                } else {
-                    resumeBackgroundMusic();
-                }
+                togglePauseRef.current();
                 return;
             }
 
@@ -148,6 +200,43 @@ function RunnerCanvas({ onStatsChange, onGameOver, onPauseChange }) {
                 height={CANVAS_HEIGHT}
                 className="game-canvas"
             />
+            {showTouchControls && (
+                <div className="mobile-controls">
+                    <div className="mobile-top-row">
+                        <button
+                            className="mobile-btn btn-pause"
+                            onTouchStart={handlePauseTap}
+                            onMouseDown={handlePauseTap}
+                        >
+                            {localPaused ? '▶' : '⏸'}
+                        </button>
+                    </div>
+                    <div className="mobile-bottom-row">
+                        <button
+                            className="mobile-btn btn-dash"
+                            onTouchStart={handleDashStart}
+                            onTouchEnd={handleDashEnd}
+                            onTouchCancel={handleDashCancel}
+                            onMouseDown={(e) => { e.preventDefault(); keysRef.current['shift'] = true; }}
+                            onMouseUp={(e) => { e.preventDefault(); keysRef.current['shift'] = false; }}
+                            onMouseLeave={() => { keysRef.current['shift'] = false; }}
+                        >
+                            DASH
+                        </button>
+                        <button
+                            className="mobile-btn btn-jump"
+                            onTouchStart={handleJumpStart}
+                            onTouchEnd={handleJumpEnd}
+                            onTouchCancel={handleJumpCancel}
+                            onMouseDown={(e) => { e.preventDefault(); keysRef.current[' '] = true; }}
+                            onMouseUp={(e) => { e.preventDefault(); keysRef.current[' '] = false; }}
+                            onMouseLeave={() => { keysRef.current[' '] = false; }}
+                        >
+                            SALTO
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -727,7 +816,7 @@ function drawPauseOverlay(ctx) {
     ctx.fillText('PAUSA', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
 
     ctx.font = '18px system-ui';
-    ctx.fillText('Pulsa P para continuar', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 42);
+    ctx.fillText('Pulsa P o el botón de pausa para continuar', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 42);
 }
 
 function createShockwave(x, y) {

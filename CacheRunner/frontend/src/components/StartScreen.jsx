@@ -43,8 +43,11 @@ function StartScreen({ onStart }) {
 
                 <div className="controls-box">
                     <h3>Controles</h3>
-                    <p><strong>Espacio</strong>, <strong>W</strong> o <strong>flecha arriba</strong>: saltar</p>
-                    <p><strong>P</strong>: pausar o continuar</p>
+                    <p><strong>Teclado:</strong></p>
+                    <p>• <strong>Espacio / W / ↑</strong>: Saltar (doble salto en el aire, mantén pulsado para planear)</p>
+                    <p>• <strong>Shift / D / → / Ctrl</strong>: Dash (impulso rápido en el aire)</p>
+                    <p>• <strong>P</strong>: Pausar o continuar</p>
+                    <p style={{ marginTop: '10px', color: '#22d3ee' }}><strong>Móvil:</strong> Botones táctiles en pantalla para saltar, planear y usar el dash.</p>
                 </div>
             </div>
         </section>
