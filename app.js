@@ -230,7 +230,8 @@ function renderProjects() {
             ? `<span class="tech-tag" style="border-color: rgba(245, 158, 11, 0.3); color: #f59e0b;"><i class="fa-solid fa-database"></i> MySQL</span>`
             : `<span class="tech-tag" style="border-color: rgba(16, 185, 129, 0.3); color: #10b981;"><i class="fa-solid fa-server"></i> JSON Local</span>`;
 
-        card.innerHTML = `
+            const playLabel = project.category === "juegos" ? "Jugar" : "Probar";
+            card.innerHTML = `
             <div class="card-header">
                 <div class="card-icon-area">
                     <i class="${project.icon}"></i>
@@ -244,11 +245,14 @@ function renderProjects() {
                 ${project.tech.slice(0, 3).map(t => `<span class="tech-tag">${t}</span>`).join("")}
             </div>
             <div class="card-actions">
-                <button class="btn btn-primary btn-open-local" data-id="${project.id}" id="btn-run-${project.id}">
-                    <i class="fa-solid fa-play"></i> Cómo Ejecutar
+                <a href="./${project.folder}/" class="btn btn-primary" id="btn-play-${project.id}">
+                    <i class="fa-solid fa-circle-play"></i> ${playLabel}
+                </a>
+                <button class="btn btn-secondary btn-open-local" data-id="${project.id}" id="btn-run-${project.id}">
+                    <i class="fa-solid fa-circle-info"></i> Guía
                 </button>
-                <a href="https://github.com/isergioam/Proyectos/tree/main/${project.folder}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" id="btn-code-${project.id}">
-                    <i class="fa-solid fa-code"></i> Código
+                <a href="https://github.com/isergioam/Proyectos/tree/main/${project.folder}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-icon-only" id="btn-code-${project.id}" title="Ver Código en GitHub">
+                    <i class="fa-brands fa-github"></i>
                 </a>
             </div>
         `;
